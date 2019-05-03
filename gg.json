@@ -1,0 +1,78 @@
+{
+    "results" : [
+       {
+          "address_components" : [
+             {
+                "long_name" : "Ga Yên Xuân",
+                "short_name" : "Ga Yên Xuân",
+                "types" : [
+                   "establishment",
+                   "point_of_interest",
+                   "train_station",
+                   "transit_station"
+                ]
+             },
+             {
+                "long_name" : "Đê Tả Lam",
+                "short_name" : "Đê Tả Lam",
+                "types" : [ "route" ]
+             },
+             {
+                "long_name" : "xóm 4",
+                "short_name" : "xóm 4",
+                "types" : [ "neighborhood", "political" ]
+             },
+             {
+                "long_name" : "Hưng Xuân",
+                "short_name" : "Hưng Xuân",
+                "types" : [ "political", "sublocality", "sublocality_level_1" ]
+             },
+             {
+                "long_name" : "Hưng Nguyên",
+                "short_name" : "Hưng Nguyên",
+                "types" : [ "administrative_area_level_2", "political" ]
+             },
+             {
+                "long_name" : "Nghệ An",
+                "short_name" : "Nghệ An",
+                "types" : [ "administrative_area_level_1", "political" ]
+             },
+             {
+                "long_name" : "Vietnam",
+                "short_name" : "VN",
+                "types" : [ "country", "political" ]
+             }
+          ],
+          "formatted_address" : "Ga Yên Xuân, Đê Tả Lam, xóm 4, Hưng Nguyên, Nghệ An, Vietnam",
+          "geometry" : {
+             "location" : {
+                "lat" : 18.6038103,
+                "lng" : 105.61981
+             },
+             "location_type" : "GEOMETRIC_CENTER",
+             "viewport" : {
+                "northeast" : {
+                   "lat" : 18.6051592802915,
+                   "lng" : 105.6211589802915
+                },
+                "southwest" : {
+                   "lat" : 18.6024613197085,
+                   "lng" : 105.6184610197085
+                }
+             }
+          },
+          "place_id" : "ChIJmyQEM8fIOTERv9ImQSqDHmk",
+          "plus_code" : {
+             "compound_code" : "JJ39+GW Hưng Xuân, Hồng Lĩnh, Nghe An, Vietnam",
+             "global_code" : "7PC7JJ39+GW"
+          },
+          "types" : [
+             "establishment",
+             "point_of_interest",
+             "train_station",
+             "transit_station"
+          ]
+       }
+    ],
+    "status" : "OK"
+ }

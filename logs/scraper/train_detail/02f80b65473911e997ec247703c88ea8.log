@@ -1,0 +1,60 @@
+2019-03-15 22:56:52 [scrapy.utils.log] INFO: Scrapy 1.6.0 started (bot: scraper)
+2019-03-15 22:56:52 [scrapy.utils.log] INFO: Versions: lxml 4.3.2.0, libxml2 2.9.9, cssselect 1.0.3, parsel 1.5.1, w3lib 1.20.0, Twisted 18.9.0, Python 3.6.7 (default, Oct 22 2018, 11:32:17) - [GCC 8.2.0], pyOpenSSL 19.0.0 (OpenSSL 1.1.1b  26 Feb 2019), cryptography 2.6.1, Platform Linux-4.17.0-041700-generic-x86_64-with-Ubuntu-18.04-bionic
+2019-03-15 22:56:52 [scrapy.crawler] INFO: Overridden settings: {'BOT_NAME': 'scraper', 'DUPEFILTER_CLASS': 'scrapy_splash.SplashAwareDupeFilter', 'HTTPCACHE_STORAGE': 'scrapy_splash.SplashAwareFSCacheStorage', 'LOG_FILE': 'logs/scraper/train_detail/02f80b65473911e997ec247703c88ea8.log', 'NEWSPIDER_MODULE': 'scraper.spiders', 'SPIDER_MODULES': ['scraper.spiders']}
+2019-03-15 22:56:52 [scrapy.extensions.telnet] INFO: Telnet Password: 7c42d026b0090a85
+2019-03-15 22:56:52 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.memusage.MemoryUsage',
+ 'scrapy.extensions.logstats.LogStats']
+2019-03-15 22:56:52 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy_splash.SplashCookiesMiddleware',
+ 'scrapy_splash.SplashMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2019-03-15 22:56:52 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy_splash.SplashDeduplicateArgsMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2019-03-15 22:56:52 [scrapy.middleware] INFO: Enabled item pipelines:
+['scraper.pipelines.MongoDbPipeline']
+2019-03-15 22:56:52 [scrapy.core.engine] INFO: Spider opened
+2019-03-15 22:56:52 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2019-03-15 22:56:52 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6024
+2019-03-15 22:56:52 [scrapy.core.engine] ERROR: Error while obtaining start requests
+Traceback (most recent call last):
+  File "/home/utm/.local/lib/python3.6/site-packages/scrapy/core/engine.py", line 127, in _next_request
+    request = next(slot.start_requests)
+  File "/home/utm/.local/lib/python3.6/site-packages/scrapy_splash/middleware.py", line 167, in process_start_requests
+    for req in start_requests:
+  File "/tmp/scraper-1552664568-ckxuoyij.egg/scraper/spiders/train_detail.py", line 42, in start_requests
+    yield SplashRequest(url, self.parse_artilce,  endpoint='execute', args={'lua_source': self.script,'timeout': 90})
+  File "/home/utm/.local/lib/python3.6/site-packages/scrapy_splash/request.py", line 76, in __init__
+    **kwargs)
+  File "/home/utm/.local/lib/python3.6/site-packages/scrapy/http/request/__init__.py", line 25, in __init__
+    self._set_url(url)
+  File "/home/utm/.local/lib/python3.6/site-packages/scrapy/http/request/__init__.py", line 62, in _set_url
+    raise ValueError('Missing scheme in request url: %s' % self._url)
+ValueError: Missing scheme in request url: 
+2019-03-15 22:56:52 [scrapy.core.engine] INFO: Closing spider (finished)
+2019-03-15 22:56:52 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2019, 3, 15, 15, 56, 52, 541315),
+ 'log_count/ERROR': 1,
+ 'log_count/INFO': 9,
+ 'memusage/max': 64319488,
+ 'memusage/startup': 64319488,
+ 'start_time': datetime.datetime(2019, 3, 15, 15, 56, 52, 531625)}
+2019-03-15 22:56:52 [scrapy.core.engine] INFO: Spider closed (finished)
