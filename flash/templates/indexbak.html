@@ -9,136 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <!-- <link  -->
-
-
-    <style>
-    #map {
-height: 100%; 
-width: 100%; 
-position: absolute;
-top: 0; 
-left: 0; 
-z-index: -900; 
-}
-/* Optional: Makes the sample page fill the window. */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.map-result {
-  width:500px;
-  height:400px;
-  border: 3px solid black;
-
-}
-#description {
-  font-family: Roboto;
-  font-size: 15px;
-  font-weight: 300;
-}
-
-#infowindow-content .title {
-  font-weight: bold;
-}
-
-#infowindow-content {
-  display: none;
-}
-
-#map #infowindow-content {
-  display: inline;
-}
-
-.pac-card {
-  margin: 10px 10px 0 0;
-  border-radius: 2px 0 0 2px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  outline: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  background-color: #fff;
-  font-family: Roboto;
-}
-
-.input_field {
-  margin: 20px 20px 20px 20px;
-}
-
-#pac-container {
-  display: inline-block;
-  padding-bottom: 12px;
-  margin-right: 12px;
-  position: relative; 
-z-index: 1; /* The z-index should be higher than Google Maps */
-width: 30%;
-left: 0;
-/* margin: 60px auto 0; */
-padding: 10px;
-background: white;
-height: auto;
-color: black;
-top :auto;
-}
-#result{
-  display: block;
-  padding-bottom: 12px;
-  margin-right: 12px;
-  position:absolute; 
-  left: 0;
-z-index: 1; /* The z-index should be higher than Google Maps */
-width: 30%;
-margin: 60px auto 0;
-padding: 10px;
-background: white;
-height: auto;
-color: black
-}
-.svg-icon { width: 16px; height: 16px; }
-
-
-.pac-controls {
-  display: inline-block;
-  padding: 5px 11px;
-}
-
-.pac-controls label {
-  font-family: Roboto;
-  font-size: 13px;
-  font-weight: 300;
-}
-
-#pac-input {
-  background-color: #fff;
-  font-family: Roboto;
-  font-size: 15px;
-  font-weight: 300;
-  margin-left: 12px;
-  padding: 0 11px 0 13px;
-  text-overflow: ellipsis;
-  width: 400px;
-}
-
-#pac-input:focus {
-  border-color: #4d90fe;
-}
-
-#title {
-  color: #fff;
-  background-color: #4d90fe;
-  font-size: 25px;
-  font-weight: 500;
-  padding: 6px 12px;
-}
-
-#button-find{
-  height: 50%;
-  width: 50%;
-  padding: 6px 12px;
-}
-
-    </style>
   
  </head>
   <body>
@@ -152,59 +22,29 @@ color: black
           
 
     <!-- <div class="pac-card" id="pac-card"> -->
-      <!-- <div>
+      <div>
         <div id="title" style="position: absolute;z-index: 1;width: 100%;height: 10%;">
           Find Route
         </div>
         <div id ="map"></div>
 
-      </div> -->
-      <nav class="blue" role="navigation">
-          <div class="nav-wrapper container">
-            <a id="logo-container" href="#" class="brand-logo">Logo</a>
-            <ul class="right hide-on-med-and-down">
-              <li><a href="#">Navbar Link</a></li>
-            </ul>
-      
-            <ul id="nav-mobile" class="sidenav">
-              <li><a href="#">Find Route
-                </a></li>
-            </ul>
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-          </div>
-      </nav>
+      </div>
       <div id="pac-container">
-      
-        <div class="row">
-          <form id="button-find" style="display: inline;">
-            <div class="input-field col s12"> <input class="input_field input-field validate" id="pac-input-from" type="text"
-                placeholder="your departure" name="departure"></div>
-            <div class="input-field col s12"> <input class="input_field input-field validate" id="pac-input-to" type="text"
-                placeholder="your destination" name="arrival"></div>
+        <form id="button-find" style="display: inline;">
+          <input class="input_field" id="pac-input-from" type="text"
+          placeholder=  "your departure"  name="departure">
+          <input  class="input_field" id="pac-input-to" type="text"
+          placeholder=  "your destination" name= "arrival" >
             <input type="submit" value="find"></input>
-          </form>
-        </div>
-       
+        </form>
       </div>
 
       <div id="result">
-        <!-- <ol>
-          <h5>driving, plane, driving </h5>
-          <h5>time: 6815, price : 41095</h5>
-          <li><span><svg focusable="false" class="svg-icon icon--plane icon-white icon--size-medium">
-                <use xlink:href="#car"></use>
-              </svg></span>Cảng hàng không Vinh</li>
-          <li><span><svg focusable="false" class="svg-icon icon--plane icon-white icon--size-medium">
-                <use xlink:href="#plane"></use>
-              </svg></span>Cảng hàng không Nội Bài</li>
-          <li><span><svg focusable="false" class="svg-icon icon--plane icon-white icon--size-medium">
-                <use xlink:href="#car"></use>
-              </svg></span>43 Chùa Bộc, Quang Trung, Đống Đa, Hanoi, Vietnam</li>
-        </ol> -->
+            <h2>dhfhkdhksdlfsdhl</h2>
       </div>
     <!-- </div> -->
-    <div id="map"></div>
-    <!-- <div id="infowindow-content">
+    <!-- <div id="map"></div>
+    <div id="infowindow-content">
       <img src="" width="16" height="16" id="place-icon">
       <span id="place-name"  class="title"></span><br>
       <span id="place-address"></span>
@@ -216,12 +56,10 @@ color: black
       // parameter when you first load the API. For example:
       // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
         var map;
-        var lstPath = [];
-
       function initMap() {
          map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 17.966091, lng: 105.950638},
-          zoom: 6
+          center: {lat: -33.8688, lng: 151.2195},
+          zoom: 13
         });
         // var card = document.getElementById('pac-card');
         var input_from = document.getElementById('pac-input-from');
@@ -354,7 +192,7 @@ color: black
 
       $('#button-find').submit(function (e) {
           e.preventDefault(); // block the traditional submission of the form.
-          lstPath = [];
+
             var url = "/find"; // send the form data here.
             $.ajax({
                 type: "POST",
@@ -364,8 +202,7 @@ color: black
                     var list = document.createElement('ul');
                   // for( var k in data.result){
                     var routes = data[Object.keys(data)[2]];
-                    console.log(routes);
-                    var i = 0;
+                    console.log(routes)
                     Object.keys(routes).forEach((key)=>{
                       var detail = routes[key]
 
@@ -381,49 +218,26 @@ color: black
                         var price = detail['price']
                         var time = detail['time']
                         var e = document.createElement('ol');
-
-                        var valueHide = document.createElement("input")
-                        // valueHide.style.visibility = "hide";
-                        valueHide.className = "value-way hide";
-                        valueHide.value = i;
-                        i = i+1;
-                        e.append(valueHide);
-                        var h2 = document.createElement('h6')
+                        var h2 = document.createElement('h3')
                         h2.innerHTML = key + "time : " + time + ", price : "+ price;
                         e.append(h2)
-                        e.onclick = function () {
-                            var v = this.querySelector("inputs").value;
-                            loadPath(v,lstPath);
-                        };
                         detail['way'].forEach((way)=>{
                           console.log(way['latDeparture']);
                       var lat = way['latDeparture'].toString();
                       var lng = way['lngDeparture'].toString();
-
-                      var flightPlanCoordinates = [
-                        {lat: way['latDeparture'], lng: way['lngDeparture']},
-                        {lat: way['latArrival'], lng: way['lngArrival']}
-
-                        // {lat: -18.142, lng: 178.431},
-                        // {lat: -27.467, lng: 153.027}
-                      ];
-                      map.setCenter({lat: way['latDeparture'], lng: way['lngDeparture']});
-                      map.setZoom(8);
-                      var path = new google.maps.Polyline({
-                        path: flightPlanCoordinates,
-                        geodesic: true,
-                        strokeColor: '#FF0000',
-                        strokeOpacity: 1.0,
-                        strokeWeight: 2
-                      });
-                      lstPath.push(path);
-                      // path.setMap(map);
-                      // var marker = new google.maps.Marker({
-                      //         map: map,
-                      //         // draggable: true,
-                      //         // animation: google.maps.Animation.DROP,
-                      //         position: {lat: Number(lat), lng: Number(lng)}
-                      //       });
+                      var drawCtb = new google.maps.Polygon({
+                                  path: firCTB,
+                                  strokeColor: '#FFAA00',
+                                  strokeOpacity: 0.8,
+                                  strokeWeight: 3,
+                                  fillOpacity: 0.1
+                              });
+                      var marker = new google.maps.Marker({
+                              map: map,
+                              // draggable: true,
+                              // animation: google.maps.Animation.DROP,
+                              position: {lat: Number(lat), lng: Number(lng)}
+                            });
                           var d = document.createElement('li')
                 
                           //  <span><svg focusable="false" class="svg-icon icon--plane icon-white icon--size-medium"><use xlink:href="#train"></use></svg></span>
@@ -444,27 +258,10 @@ color: black
                         list.append(e);
                     })
                     $('#result').append(list);
-                     loadPath(1,lstPath);
-
                   // } // display the returned data in the console.
                 }
             });
         });
-
-        function loadPath(i,paths){
-          // if ($('#'+id).is(':checked')) {
-          
-            for(var j = 0; j < paths.length ; j++){
-              if (i == j){paths[j].setMap(map);}
-                else {paths[j].setMap(null);}
-            }
-        // }
-        // else
-            // for(i = 0; i < l; i++){
-            //     layers[i].setMap(null);
-            // }
-        }
-        // function selectPath
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbhGuXbFO7RvpyYPCeZWlkzzTE2rBZbYc&libraries=places&callback=initMap"
         async defer></script>

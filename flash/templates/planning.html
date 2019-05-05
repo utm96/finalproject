@@ -1,203 +1,165 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Place Autocomplete</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbhGuXbFO7RvpyYPCeZWlkzzTE2rBZbYc&libraries=places"
+
+<head>
+  <title>Place Autocomplete</title>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/style.css"> -->
+
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbhGuXbFO7RvpyYPCeZWlkzzTE2rBZbYc&libraries=places"
     async defer></script> -->
-    <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
 
-      .map-result {
-        width:500px;
-        height:400px;
-        border: 3px solid black;
+</head>
 
-      }
-      #description {
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-      }
+<body>
+  <nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+      <a id="logo-container" href="#" class="brand-logo">Logo</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">Navbar Link</a></li>
+      </ul>
 
-      #infowindow-content .title {
-        font-weight: bold;
-      }
-
-      #infowindow-content {
-        display: none;
-      }
-
-      #map #infowindow-content {
-        display: inline;
-      }
-
-      .pac-card {
-        margin: 10px 10px 0 0;
-        border-radius: 2px 0 0 2px;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        outline: none;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-        background-color: #fff;
-        font-family: Roboto;
-      }
-
-      .input_field {
-        margin: 20px 20px 20px 20px;
-      }
-
-      #pac-container {
-        display: inline-block;
-
-        padding-bottom: 12px;
-        margin-right: 12px;
-      }
-      .svg-icon { width: 16px; height: 16px; }
-
-
-      .pac-controls {
-        display: inline-block;
-        padding: 5px 11px;
-      }
-
-      .pac-controls label {
-        font-family: Roboto;
-        font-size: 13px;
-        font-weight: 300;
-      }
-
-      #pac-input {
-        background-color: #fff;
-        font-family: Roboto;
-        font-size: 15px;
-        font-weight: 300;
-        margin-left: 12px;
-        padding: 0 11px 0 13px;
-        text-overflow: ellipsis;
-        width: 400px;
-      }
-
-      #pac-input:focus {
-        border-color: #4d90fe;
-      }
-
-      #title {
-        color: #fff;
-        background-color: #4d90fe;
-        font-size: 25px;
-        font-weight: 500;
-        padding: 6px 12px;
-      }
-
-      #button-find{
-        height: 50%;
-        width: 50%;
-        padding: 6px 12px;
-      }
-
-      input[readonly] {
-    background-color: transparent;
-    padding: 0px;
-    border: initial;
-    font: inherit;
-    margin: 0px;
-    width: auto;
-    min-width: 1;
-}
-
-    </style>
-  </head>
-  <body>
-
-                <div id = "select-day">
-    <select id = "number-day" required>
-        <option value= "">chọn số ngày</option> 
-        <option value=1>1</option>
-        <option value=2>2</option>
-        <option value=3>3</option>
-        <!-- <option value=4>Audi</option> -->
-    </select>
-    <div id= "inputDay"></div>
-    <div id="add-place">
-      <form id="add-place-form-id" style="display: inline;">
-        <div class="location_desire" style="display: inline;" id="location_0">
-        <input class="input_field" id="add-place-address" type="text"
-        placeholder=  "add location"  name="location">
-        <span>Time Start</span> <input type="time" id="timeStart">
-        <span>Time End</span> <input type="time" id="timeEnd">
-        <span>Duration</span> <input type="time" id="timeDuration">
-        <input type="button" value="Add Location" onclick="addLocation()">
-        <!-- <input type="button" value="delete" style="visibility: hidden;" onclick="deleteLocation()"> -->
-      </div>
-      </form>
-      <div id="list-place-container">
-        <ul  id="list-place"></ul>
-      </div>
-      <!-- <span><input type="button" class="delete-button" value="delete"></span> -->
+      <ul id="nav-mobile" class="sidenav">
+        <li><a href="#">Navbar Link</a></li>
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
+  </nav>
+
+  <div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+      <div class="container">
+        <br><br>
+        <h1 class="header center teal-text text-lighten-2">Parallax Template</h1>
+        <br><br>
+      </div>
+    </div>
+    <div class="parallax"><img src="background1.jpg" alt="Unsplashed background img 1"></div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col s12 after-col" id="select-day">
+        <div class="input-field">
+          <select id="number-day" required>
+            <option value="">chọn số ngày</option>
+            <option value=1>1</option>
+            <option value=2>2</option>
+            <option value=3>3</option>
+
+          </select>
+          <label>Materialize Multiple Select</label>
+        </div>
+      </div>
+    </div>
+      <div class="row">
+        <h5 class="header col s12 light">Nhap thong tin cac diem den mong muon</h5>
+      </div>
+      <div class="row">
+        <div id="add-place">
+          <form id="add-place-form-id">
+              <div class="input-field col s6">
+                <input placeholder="Placeholder" id="add-place-address" type="text" class="input-field validate">
+                <label for="first_name">First Name</label>
+              </div>
+              <div class="input-field col s2">
+                <input id="timeStart" type="time" class="input-field validate">
+                <label for="first_name">Time Start</label>
+              </div>
+              <div class="input-field col s2">
+                <input id="timeEnd" type="time" class="input-field validate">
+                <label for="first_name">Time End</label>
+              </div>
+              <div class="input-field col s2">
+                <input id="timeDuration" type="time" class="input-field validate">
+                <label for="first_name">Time End</label>
+              </div>
+              <input type="button" class="waves-effect waves-light btn" value="Add Location" onclick="addLocation()">
+          </form>
+          <div id="list-place-container">
+            <ul id="list-place"></ul>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="row">
+          <div class="col s12">
+            <div id="inputDay"></div>
+          </div>
+      </div>
+      <div class="row">
+          <input type="button" class="waves-effect waves-light btn" value="Creat Plan" onclick="sendData()">
+      </div>
+    
+
     <script>
-      function init(){
-          var inputAddLocation = document.getElementById('add-place-address');
+      function init() {
+        var inputAddLocation = document.getElementById('add-place-address');
         var autocomplete_from = new google.maps.places.Autocomplete(inputAddLocation);
         autocomplete_from.setFields(
-            ['address_components', 'geometry', 'icon', 'name']);
-            autocomplete_from.setComponentRestrictions(
-            {'country': ['vn']});}
+          ['address_components', 'geometry', 'icon', 'name']);
+        autocomplete_from.setComponentRestrictions(
+          { 'country': ['vn'] });
+      }
 
-      function addLocation(){
+      function addLocation() {
         var divLocation = document.createElement("li");
+
+
+        // <div class="input-field col s6">
+        //         <input placeholder="Placeholder" id="add-place-address" type="text" class="input-field validate">
+        //         <label for="first_name">First Name</label>
+        //       </div>
         divLocation.className = "place-class";
         //address place
+        // var $newLocation = $("<div class=\"input-field col s6\"><label for=\"first_name\">Adress</label></div>")
+        // $("#inputDay").append()
+        var inputField = document.createElement("div");
+        inputField.className = "input-field col s6";
+        var labelAdress = document.createElement("label");
+        labelAdress.innerHTML = "Adress";
+        labelAdress.setAttribute("for","first_name");
+          inputField.append(labelAdress);
         var address = document.createElement("input");
-        address.className = "address-place";
-        address.setAttribute('readonly',true);
+        address.className = "address-place input-field validate";
+        address.setAttribute('readonly', true);
         address.value = document.getElementById("add-place-address").value;
 
         // var input = document.querySelector('input'); // get the input element
         address.addEventListener('input', resizeInput); // bind the "resizeInput" callback on "input" event
         resizeInput.call(address); // immediately call the function
-
-
+        inputField.append(address)
 
 
         // address.innerHTML = document.getElementById("add-place-address").value;
         //start time 
         var startTime = document.createElement("input");
         startTime.className = "start-time-place";
-        startTime.setAttribute('readonly',true);
+        startTime.setAttribute('readonly', true);
         startTime.value = document.getElementById("timeStart").value;
 
         var endTime = document.createElement("input");
         endTime.className = "end-time-place";
-        endTime.setAttribute('readonly',true);
+        endTime.setAttribute('readonly', true);
         endTime.value = document.getElementById("timeEnd").value;
 
         var durationTime = document.createElement("input");
         durationTime.className = "duration-time-place";
-        durationTime.setAttribute('readonly',true);
+        durationTime.setAttribute('readonly', true);
         durationTime.value = document.getElementById("timeDuration").value;
 
         var deleteButton = document.createElement("input");
-        deleteButton.setAttribute("type","button");
+        deleteButton.setAttribute("type", "button");
         deleteButton.className = "delete-place";
         deleteButton.value = "delete";
         deleteButton.onclick = function () {
-    this.parentNode.remove(this);
-};
-        divLocation.append(address);
+          this.parentNode.remove(this);
+        };
+        divLocation.append(inputField);
         divLocation.append("open: ");
         divLocation.append(startTime);
         divLocation.append("close: ");
@@ -210,119 +172,148 @@
       }
 
       function resizeInput() {
-          this.style.width = this.value.length + "ch";
+        this.style.width = this.value.length + "ch";
       }
 
-      function deletePlace(temp1){
+      function deletePlace(temp1) {
         temp1.parentNode.parentNode.remove(temp1.parentNode)
 
       }
     </script>
-    <input type="button" value="planning" onclick="sendData()"></input>
+    <!-- <input type="button" value="planning" onclick="sendData()"></input> -->
     <script>
-         function sendData(){
-             var listDay = document.getElementsByClassName("day-of-route");
-             lstRoute = []
-             for (var day of listDay){
-                var startNode = {
-                  adress : day.children[0].children[0].value,
-                  timeStart : day.children[1].children[0].value,
-                  timeEnd : day.children[1].children[0].value,
-                  timeDuration : 0
-                }
-                var endNode = {
-                  adress : day.children[2].children[0].value,
-                  timeStart : day.children[3].children[0].value,
-                  timeEnd : day.children[3].children[0].value,
-                  timeDuration : 0
-                }
-                var route = [startNode,endNode];
-                console.log(route);
-                lstRoute.push(route);
-             }
-             console.log(lstRoute)
-             var url = "/planning"; // send the form data here.
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: JSON.stringify({routes:lstRoute}), // serializes the form's elements.
-                contentType: 'application/json;charset=UTF-8',
-                success: function (data) {alert("done")}})
-            //  listDay.array.forEach(element => {
-               
-            //  });
-            //  alert("sending");
-         }
+      function sendData() {
+        var listDay = document.getElementsByClassName("day-of-route");
+        lstRoute = []
+        lstLocation = []
+        for (var day of listDay) {
+          var startNode = {
+            adress: day.children[0].children[0].value,
+            timeStart: day.children[1].children[0].value,
+            timeEnd: day.children[1].children[0].value,
+            timeDuration: 0
+          }
+          var endNode = {
+            adress: day.children[2].children[0].value,
+            timeStart: day.children[3].children[0].value,
+            timeEnd: day.children[3].children[0].value,
+            timeDuration: 0
+          }
+          var route = [startNode, endNode];
+          console.log(route);
+          lstRoute.push(route);
+        }
+
+        var listLocation = document.getElementsByClassName("place-class");
+        for (var place of listLocation) {
+          var adress = place.querySelector('.address-place').value;
+          var startTime = place.querySelector('.start-time-place').value;
+          var endTime = place.querySelector('.end-time-place').value;
+          var durationTime = place.querySelector('.duration-time-place').value;
+          lstLocation.push({
+            address: adress, start: startTime, end: endTime, duration: durationTime
+          })
+        }
+        console.log(lstLocation)
+        var url = "/planning"; // send the form data here.
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: JSON.stringify({ routes: lstRoute, locations: lstLocation }), // serializes the form's elements.
+          contentType: 'application/json;charset=UTF-8',
+          success: function (data) { alert("done") }
+        })
+        //  listDay.array.forEach(element => {
+
+        //  });
+        //  alert("sending");
+      }
     </script>
 
-    <script>$("#number-day").on('change',function(e){
+    <script>$("#number-day").on('change', function (e) {
         var table = document.createElement("table");
         table.innerHTML = "<tr><th>Day</th><th>Start Adress</th><th>Start Time</th><th>End Adress</th><th>End Time</th></tr>"
         $("#inputDay").empty();
         var value = this.value;
         // var ol = document.createElement('ol');
-        for (var i= 0;i<value;i++){
-            var dayDiv = document.createElement('tr');
-            // dayDiv.className = "row-day";
-            dayDiv.className = 'day-of-route';
-            dayDiv.id =  'day-'+(i+1).toString();
-            var inputDayStart = document.createElement('input');
-            inputDayStart.type = 'text';
-            inputDayStart.className = 'input_field';
-            inputDayStart.name = "startDay";
-            var autocomplete_start = new google.maps.places.Autocomplete(inputDayStart);
-            autocomplete_start.setFields(
+        for (var i = 0; i < value; i++) {
+          var dayDiv = document.createElement('tr');
+          // dayDiv.className = "row-day";
+          dayDiv.className = 'day-of-route';
+          dayDiv.id = 'day-' + (i + 1).toString();
+
+          var inputDayStart = document.createElement('input');
+          inputDayStart.type = 'text';
+          inputDayStart.className = 'input_field';
+          inputDayStart.name = "startDay";
+          var autocomplete_start = new google.maps.places.Autocomplete(inputDayStart);
+          autocomplete_start.setFields(
             ['address_components', 'geometry', 'icon', 'name']);
-            autocomplete_start.setComponentRestrictions(
-            {'country': ['vn']});
+          autocomplete_start.setComponentRestrictions(
+            { 'country': ['vn'] });
 
-            //endDay
-            var inputDayEnd = document.createElement('input');
-            inputDayEnd.type = 'text';
-            inputDayEnd.className = 'input_field';
-            inputDayEnd.name = "endDay";
-            var autocomplete_end = new google.maps.places.Autocomplete(inputDayEnd);
-            autocomplete_end.setFields(
+          //endDay
+          var inputDayEnd = document.createElement('input');
+          inputDayEnd.type = 'text';
+          inputDayEnd.className = 'input_field';
+          inputDayEnd.name = "endDay";
+          var autocomplete_end = new google.maps.places.Autocomplete(inputDayEnd);
+          autocomplete_end.setFields(
             ['address_components', 'geometry', 'icon', 'name']);
-            autocomplete_end.setComponentRestrictions(
-            {'country': ['vn']});
+          autocomplete_end.setComponentRestrictions(
+            { 'country': ['vn'] });
 
 
-            dayDiv.append(document.createElement('td').innerHTML = (i+1));
-            var td1 = document.createElement('td');
-            td1.append(inputDayStart);
-            dayDiv.append(td1);
-            var timeStart = document.createElement('input')
-            timeStart.className = "time-picker"
-            timeStart.type = 'time';
-            var timeEnd = document.createElement('input')
-            timeEnd.className = "time-picker"
-            timeEnd.type = 'time';
-            var td2 = document.createElement('td');
-            td2.append(timeStart);
-            dayDiv.append(td2);
-            var td3 = document.createElement('td');
-            td3.append(inputDayEnd);
-            dayDiv.append(td3);            
-            table.append(dayDiv);
+          dayDiv.append(document.createElement('td').innerHTML = (i + 1));
+          var td1 = document.createElement('td');
+          td1.append(inputDayStart);
+          dayDiv.append(td1);
+          var timeStart = document.createElement('input')
+          timeStart.className = "time-picker"
+          timeStart.type = 'time';
+          var timeEnd = document.createElement('input')
+          timeEnd.className = "time-picker"
+          timeEnd.type = 'time';
+          var td2 = document.createElement('td');
+          td2.append(timeStart);
+          dayDiv.append(td2);
+          var td3 = document.createElement('td');
+          td3.append(inputDayEnd);
+          dayDiv.append(td3);
+          table.append(dayDiv);
 
-            var td4 = document.createElement('td');
-            td4.append(timeEnd);
-            dayDiv.append(td4);
-            // $(".time-picker").timepicker();
+          var td4 = document.createElement('td');
+          td4.append(timeEnd);
+          dayDiv.append(td4);
+          // $(".time-picker").timepicker();
         }
 
         $("#inputDay").append(table);
-    });
-        
-        </script>
+      });
+
+    </script>
 
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbhGuXbFO7RvpyYPCeZWlkzzTE2rBZbYc&libraries=places&callback=init"
-async defer></script>
-</div>          
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbhGuXbFO7RvpyYPCeZWlkzzTE2rBZbYc&libraries=places&callback=init"
+      async defer></script>
+    <script type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems, options);
+      });
+
+      // Or with jQuery
+
+      $(document).ready(function () {
+        $('select').formSelect();
+      });
+    </script>
 
 
+</body>
 
-  </body>
 </html>
