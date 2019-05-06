@@ -54,7 +54,12 @@
           <label>Materialize Multiple Select</label>
         </div>
       </div>
-    </div>
+    </div>      
+    <div class="row">
+          <div class="col s12">
+            <div id="inputDay"></div>
+          </div>
+      </div>
       <div class="row">
         <h5 class="header col s12 light">Nhap thong tin cac diem den mong muon</h5>
       </div>
@@ -74,8 +79,8 @@
                 <label for="first_name">Time End</label>
               </div>
               <div class="input-field col s2">
-                <input id="timeDuration" type="time" class="input-field validate">
-                <label for="first_name">Time End</label>
+                <input placeholder="Placeholder" id="timeDuration" type="number" class="input-field validate" >
+                <label for="first_name">Duration</label>
               </div>
               <input type="button" class="waves-effect waves-light btn" value="Add Location" onclick="addLocation()">
           </form>
@@ -84,16 +89,14 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <input type="button" class="waves-effect waves-light btn" value="Creat Plan" onclick="sendData()">
+      </div>
+      <div class="result-plan"></div>
       </div>
 
-      <div class="row">
-          <div class="col s12">
-            <div id="inputDay"></div>
-          </div>
-      </div>
-      <div class="row">
-          <input type="button" class="waves-effect waves-light btn" value="Creat Plan" onclick="sendData()">
-      </div>
+
+
     
 
     <script>
@@ -130,43 +133,69 @@
         address.value = document.getElementById("add-place-address").value;
 
         // var input = document.querySelector('input'); // get the input element
-        address.addEventListener('input', resizeInput); // bind the "resizeInput" callback on "input" event
-        resizeInput.call(address); // immediately call the function
+        // address.addEventListener('input', resizeInput); // bind the "resizeInput" callback on "input" event
+        // resizeInput.call(address); // immediately call the function
         inputField.append(address)
 
 
         // address.innerHTML = document.getElementById("add-place-address").value;
         //start time 
         var startTime = document.createElement("input");
-        startTime.className = "start-time-place";
+        startTime.className = "start-time-place input-field validate";
         startTime.setAttribute('readonly', true);
         startTime.value = document.getElementById("timeStart").value;
+        var inputFieldStartTime = document.createElement("div");
+        inputFieldStartTime.className = "input-field col s2";
+        var labelStart = document.createElement("label");
+        labelStart.innerHTML = "Open";
+        labelStart.setAttribute("for","first_name");
+        inputFieldStartTime.append(labelStart);
+        inputFieldStartTime.append(startTime);
+
 
         var endTime = document.createElement("input");
         endTime.className = "end-time-place";
         endTime.setAttribute('readonly', true);
         endTime.value = document.getElementById("timeEnd").value;
+        var inputFieldEndTime = document.createElement("div");
+        inputFieldEndTime.className = "input-field col s2";
+        var labelEnd = document.createElement("label");
+        labelEnd.innerHTML = "Close";
+        labelEnd.setAttribute("for","first_name");
+        inputFieldEndTime.append(labelEnd);
+        inputFieldEndTime.append(endTime);
+
 
         var durationTime = document.createElement("input");
         durationTime.className = "duration-time-place";
         durationTime.setAttribute('readonly', true);
         durationTime.value = document.getElementById("timeDuration").value;
+        var inputFieldDurTime = document.createElement("div");
+        inputFieldDurTime.className = "input-field col s1";
+        var labelDur = document.createElement("label");
+        labelDur.innerHTML = "Duration";
+        labelDur.setAttribute("for","first_name");
+        inputFieldDurTime.append(labelDur);
+        inputFieldDurTime.append(durationTime);
+
 
         var deleteButton = document.createElement("input");
         deleteButton.setAttribute("type", "button");
         deleteButton.className = "delete-place";
         deleteButton.value = "delete";
         deleteButton.onclick = function () {
-          this.parentNode.remove(this);
+          this.parentNode.parentNode.remove(this.parentNode);
         };
+        var delBtn = document.createElement("div");
+        delBtn.className = "input-field col s1";
+        delBtn.append(deleteButton);
+
+
         divLocation.append(inputField);
-        divLocation.append("open: ");
-        divLocation.append(startTime);
-        divLocation.append("close: ");
-        divLocation.append(endTime);
-        divLocation.append("Duration: ");
-        divLocation.append(durationTime);
-        divLocation.append(deleteButton);
+        divLocation.append(inputFieldStartTime);
+        divLocation.append(inputFieldEndTime);
+        divLocation.append(inputFieldDurTime);
+        divLocation.append(delBtn);
         $("#list-place").append(divLocation);
 
       }
@@ -175,10 +204,10 @@
         this.style.width = this.value.length + "ch";
       }
 
-      function deletePlace(temp1) {
-        temp1.parentNode.parentNode.remove(temp1.parentNode)
+      // function deletePlace(temp1) {
+      //   temp1.parentNode.parentNode.parentNode.remove(temp1.parentNode.parentNode);
 
-      }
+      // }
     </script>
     <!-- <input type="button" value="planning" onclick="sendData()"></input> -->
     <script>
@@ -189,14 +218,14 @@
         for (var day of listDay) {
           var startNode = {
             adress: day.children[0].children[0].value,
-            timeStart: day.children[1].children[0].value,
-            timeEnd: day.children[1].children[0].value,
+            timeStart: convertTime(day.children[1].children[0].value),
+            timeEnd: convertTime(day.children[1].children[0].value),
             timeDuration: 0
           }
           var endNode = {
             adress: day.children[2].children[0].value,
-            timeStart: day.children[3].children[0].value,
-            timeEnd: day.children[3].children[0].value,
+            timeStart: convertTime(day.children[3].children[0].value),
+            timeEnd: convertTime(day.children[3].children[0].value),
             timeDuration: 0
           }
           var route = [startNode, endNode];
@@ -209,7 +238,7 @@
           var adress = place.querySelector('.address-place').value;
           var startTime = convertTime(place.querySelector('.start-time-place').value);
           var endTime = convertTime(place.querySelector('.end-time-place').value);
-          var durationTime = place.querySelector('.duration-time-place').value;
+          var durationTime = place.querySelector('.duration-time-place').value * 60;
           lstLocation.push({
             address: adress, start: startTime, end: endTime, duration: durationTime
           })
@@ -221,7 +250,38 @@
           url: url,
           data: JSON.stringify({ routes: lstRoute, locations: lstLocation }), // serializes the form's elements.
           contentType: 'application/json;charset=UTF-8',
-          success: function (data) { alert("done") }
+          success: function (data) { 
+            var i = 1;
+            for (var day of data){
+              var rowRoute = document.createElement("div");
+              var head = document.createElement("h4");
+              head.innerHTML = "Day "+ i;
+              rowRoute.className = "row day-route";
+              rowRoute.append(head);
+              i++;
+              for (var place of day) {
+                place = JSON.parse(place);
+                console.log(place);
+                var inputField = document.createElement("div");
+                inputField.className = "input-field col s6";
+                // var labelAdress = document.createElement("label");
+                // labelAdress.innerHTML = "Adress";
+                // labelAdress.setAttribute("for","first_name");
+                //   inputField.append(labelAdress);
+                var address = document.createElement("input");
+                address.className = "address-place input-field validate";
+                address.setAttribute('readonly', true);
+                address.value = place['address'];
+
+                // var input = document.querySelector('input'); // get the input element
+                // address.addEventListener('input', resizeInput); // bind the "resizeInput" callback on "input" event
+                // resizeInput.call(address); // immediately call the function
+                inputField.append(address);
+                rowRoute.append(inputField);
+              }
+              $(".result-plan").append(rowRoute);
+            }
+             }
         })
         //  listDay.array.forEach(element => {
 

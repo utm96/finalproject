@@ -14,7 +14,9 @@ html, body {
   margin: 0;
   padding: 0;
 }
-
+.day-route{
+  margin-bottom: 10px;
+}
 .map-result {
   width:500px;
   height:400px;

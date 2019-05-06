@@ -67,7 +67,7 @@ def canInsert(node,route,i,gmaps,driver,db):
     subCon1 = node.startTime >= node.earliestTime
     subCon2 = node.endTime  <= node.lastestTime
     print("startCondition : " + str(subCon1) + " , endCondition : " + str(subCon2))
-    check  = node.startTime >= node.earliestTime and node.endTime <= node.lastestTime
+    check  = subCon1 and subCon2
 
 
     #check the rest of post node
@@ -108,10 +108,11 @@ def canInsert(node,route,i,gmaps,driver,db):
     #     print("cant insert")
 
     #     return False
+    print("route_check : "+ str(check))
     return {'check': check, 'route' : routeCheck}
 
 def getFee(nodeDeparture,nodeArrival,gmaps,driver,db):
-
+    print(str(nodeArrival))
     if (nodeArrival.address in nodeDeparture.fee):
         return nodeDeparture.fee[nodeArrival.address]
     # x = controllerFindRoute()

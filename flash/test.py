@@ -58,13 +58,25 @@ def planning_home():
         routes = data['routes']
         locations = data['locations']
         print(locations)
-        # listNodeUnschedule = []
+        listNodeUnschedule = []
         # lstOption = []
-        # client = MongoClient(mongo_uri)
-        # db = client[mongo_db]
+        client = MongoClient(mongo_uri)
+        db = client[mongo_db]
 
-        # uri = "bolt://localhost"
-        # driver = GraphDatabase.driver(uri, auth=("neo4j", "123a!@#A"))
+        uri = "bolt://localhost"
+        listRoute  = []
+        listNodeUnschedule =  []
+
+        driver = GraphDatabase.driver(uri, auth=("neo4j", "123a!@#A"))
+        for day in data['routes']:
+            start  = day[0]
+            startNode = Node(1,start['timeStart'],start['timeStart'],0,start['adress'])
+            end = day[1]
+            endNode = Node(1,end['timeStart'],end['timeStart'],0,end['adress'])
+            listRoute.append([startNode,endNode])
+        for place in data['locations']:
+            location = Node(1,place['start'],place['end'],place['duration'],place['address'])
+            listNodeUnschedule.append(location)
         # dpt = Node(1,21600,50,60,"22 lê khôi, Vinh, Nghệ An")
         # arv = Node(1,20,50,60,"Đại học Bách Khoa Hà Nội")
         # a = Node(1,25200,28000,300,"43 chùa bộc, đống đa, hà nội")
@@ -76,25 +88,34 @@ def planning_home():
         # listNodeUnschedule =  [a,b,c,d,e]
         # listRoute = [[Node(1,21600,21600,0,"22 lê khôi, Vinh, Nghệ An"),Node(1,576000,576000,0,"Đại học Bách Khoa Hà Nội")],[Node(1,21600,21600,0,"Đại học Bách Khoa Hà Nội"),Node(1,576000,576000,0,"22 lê khôi, Vinh, Nghệ An")]]
         # print('result')
-        # from copy import deepcopy
-        # firstSolution = createPlan(listNodeUnschedule,deepcopy(listRoute),gmaps,driver,db)
-        # print("listNodeUnschedule")
-        # for _ in listNodeUnschedule:
-        #     print(str(_))
-        # for route in firstSolution:
-        #     if(len(route)>=3):
-        #         print("unschedule element")
-        #         for i in range(1,len(route)-1):
-        #             print(str(route[i]))
-        #             listNodeUnschedule.append(route[i])
+        from copy import deepcopy
+        firstSolution = createPlan(listNodeUnschedule,deepcopy(listRoute),gmaps,driver,db)
+        print("listNodeUnschedule")
+        for _ in listNodeUnschedule:
+            print(str(_))
+        for route in firstSolution:
+            if(len(route)>=3):
+                print("unschedule element")
+                for i in range(1,len(route)-1):
+                    print(str(route[i]))
+                    listNodeUnschedule.append(route[i])
 
         # print("listNodeUnschedule")
         # for _ in listNodeUnschedule:
         #     print(str(_))
-        # secondSolution = createPlan(deepcopy(listNodeUnschedule),deepcopy(listRoute),gmaps,driver,db)
+        secondSolution = createPlan(deepcopy(listNodeUnschedule),deepcopy(listRoute),gmaps,driver,db)
 
-        # bestSolution = firstSolution if getTotalScore(firstSolution) >= getTotalScore(secondSolution) else secondSolution
-        return {'đ':'s'}
+        bestSolution = firstSolution if getTotalScore(firstSolution) >= getTotalScore(secondSolution) else secondSolution
+        solutionFinal = []
+        for day in bestSolution:
+            dayFinal = []
+            for _ in day:
+                _ = _.toJSON()
+                dayFinal.append(_)
+                print(_)
+            solutionFinal.append(dayFinal)
+        print(solutionFinal)
+        return jsonify(solutionFinal)
 
 
 

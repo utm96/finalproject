@@ -1,3 +1,5 @@
+import json
+
 class Node:
     def __init__(self,score,earliestTime,lastestTime,serviceTime,address):
         self.score = score
@@ -14,6 +16,9 @@ class Node:
         self.fee[id] = fee
     def  __str__(self):
         return self.address +","+str(self.startTime) + "," + str(self.endTime) + ", lastestTime : " +str(self.lastestTime) 
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
 
 class UsePlan:
     def __init__(self,dayRoutes):
