@@ -25,7 +25,6 @@ query_car_route = ["MATCH (a:CarStop {address:\"","","\"}),(b:CarStop {address:\
 with driver.session() as graphDB_Session:
     for route in routes:
 
-
         query_car_route[1] = route['departure']
         query_car_route[3] = route['arrival']
         query_car_route[5] = str(route['price'])

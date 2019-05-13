@@ -202,16 +202,47 @@ def taxi_fee(dis):
 def get_level(address_components,gmaps,db):
     result = {}
     i = 0
+    name = ''
     for component in address_components:
         if 'administrative_area_level_1'  in component['types']:
             i += 1
-            # print(component['long_name'])
-            # print(address_components)
-            ad1 = gmaps.geocode(component)
-            # print(ad1)
-            place_id = ad1[0]['place_id']
-            name = db['region1_detail'].find_one({'place_id':place_id})['Ten tinh,thanh pho']
-            result['administrative_area_level_1'] = name
+            print("========Component========================")
+            print(component)
+            try: 
+                name = list(db['region1_detail'].find( {"Info.address_components":{"$elemMatch":component}}))[0]['Ten tinh,thanh pho']
+                print("name : =================================" +name)
+                result['administrative_area_level_1'] = name
+    # print(address_components)
+            except:
+                pass
+            if(name == ''):
+
+                try:
+                    from copy import deepcopy
+
+                    component1 = deepcopy(component)
+                    component1['long_name'] = convert(component1['long_name'])
+                    component1['short_name'] = convert(component1['short_name'])
+                    print(component)
+                    print("=====after convert==========")
+                    name = list(db['region1_detail'].find( {"Info.address_components":{"$elemMatch":component1}}))[0]['Ten tinh,thanh pho']
+                    print("name : =================================" +name)
+                    result['administrative_area_level_1'] = name
+                # try:
+                #     pass
+                except :
+                    
+                    # ad1 = gmaps.geocode(component)
+                    # print("-----geocode------")
+                    component['country'] = 'VN'
+                    ad1 = gmaps.geocode(component['long_name'],components = component)
+                    print(ad1)
+
+                    place_id = ad1[0]['place_id']
+                    print("place_id : " + place_id)
+                    name = db['region1_detail'].find_one({'place_id':place_id})['Ten tinh,thanh pho']
+                    print("name : =================================" +name)
+                    result['administrative_area_level_1'] = name
         if ('locality' in component['types']) or ('administrative_area_level_2' in component['types']) or ('route' in component['types']) or ('sublocality_level_1'  in component['types']):
             i +=1
             result['level_'+str(i)] = component['long_name']
@@ -221,11 +252,37 @@ def fomat_text(text):
     for ch in ['\\','`','*','_','{','}','[',']','(',')','>','#','+','-','.','!','$','\''," ",',']:
         text = text.replace(ch,"")
     return text
+def convert(text):
+    import re
+
+    patterns = {
+    '[àáảãạăắằẵặẳâầấậẫẩ]': 'a',
+    '[đ]': 'd',
+    '[èéẻẽẹêềếểễệ]': 'e',
+    '[ìíỉĩị]': 'i',
+    '[òóỏõọôồốổỗộơờớởỡợ]': 'o',
+    '[ùúủũụưừứửữự]': 'u',
+    '[ỳýỷỹỵ]': 'y',
+    'Đ': 'D',
+    '[ÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪ]': 'A',
+    '[ÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠ]': 'O',
+    '[ÌÍỊỈĨ]': 'I',
+    '[ƯỪỨỰỬỮÙÚỤỦŨ]': 'U',
+    '[ÌÍỊỈĨ]': 'I',
+    '[ÈÉẸẺẼÊỀẾỆỂỄ]': 'E'
+    }
+    output = text
+    for regex, replace in patterns.items():
+        output = re.sub(regex, replace, output)
+        # deal with upper case
+        # output = re.sub(regex.upper(), replace.upper(), output)
+    return output
+
 def create_level(graphDB_Session,name,long_name,short_name,lat,lng,level,nameParent,levelParent):
     query_create  = ['CREATE (',"",":"+level+" { name:'","","',lat : ","",", lng:","",", long_name:'","","', short_name:'","","'})"]
-    query_car  = ['CREATE (',"",":CarStation { name:'","","', long_name:'","","', short_name:'","","'})"]
-    query_train  = ['CREATE (',"",":TrainStation { name:'","","', long_name:'","","', short_name:'","","'})"]
-    query_plane  = ['CREATE (',"",":PlaneStation { name:'","","', long_name:'","","', short_name:'","","'})"]
+    query_car  = ['CREATE (',"",":CarStation { name:'","","', long_name:'","","', short_name:'","","',lat : ","",", lng:","","})"]
+    query_train  = ['CREATE (',"",":TrainStation { name:'","","', long_name:'","","', short_name:'","","',lat : ","",", lng:","","})"]
+    query_plane  = ['CREATE (',"",":PlaneStation { name:'","","', long_name:'","","', short_name:'","","',lat : ","",", lng:","","})"]
     # query_car  = ['CREATE (',"",":BoardStation { name:'","","'})"]
 
     query_car_relation ="MATCH (a:"+level+"),(b:CarStation) WHERE a.name = \""+name+"\" and a.name = b.name CREATE (a)-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 }]->(b)"
@@ -242,24 +299,29 @@ def create_level(graphDB_Session,name,long_name,short_name,lat,lng,level,namePar
     query_create[5] = lat 
     query_create[7] = lng
     query_create[9] = long_name
+    
     query_create[11] = short_name
 
     query_car[1] = fomat_text(name)+'_car'
     query_car[3] = name
     query_car[5] = long_name
     query_car[7] = short_name
+    query_car[9] = lat
+    query_car[11] = lng
 
     query_train[1] = fomat_text(name)+'_train'
     query_train[3] = name       
     query_train[5] = long_name
     query_train[7] = short_name
-
+    query_train[9] = lat
+    query_train[11] = lng
 
     query_plane[1] = fomat_text(name)+'_plane'
     query_plane[3] = name
     query_plane[5] = long_name
     query_plane[7] = short_name
-
+    query_plane[9] = lat
+    query_plane[11] = lng
     # print(''.join(query_car))
     # print(''.join(query_create))
 
@@ -652,7 +714,11 @@ def find_route(departure,arrival,gmaps,driver,db):
             #             i = i+1
             #         arrival = ways[i]['Arrival']
             totalCost = 0
+            print("================way================")
+            print(ways)
             for w in way['way']:
+                print("================w======================")
+                print(w)
                 if(w['type'] == 'driving'):
                     info_cost =  gmaps.distance_matrix([[w['latDeparture'],w['lngDeparture']]],[[w['latArrival'],w['lngArrival']]])
                     w['cost'] = info_cost['rows'][0]['elements'][0]['duration']['value']

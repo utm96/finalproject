@@ -48,9 +48,9 @@ from neo4j import GraphDatabase
 #     l.remove(l[i])
 
 gmaps = googlemaps.Client(key='AIzaSyCbhGuXbFO7RvpyYPCeZWlkzzTE2rBZbYc')
-
+# {'long_name': 'Nam Dinh', 'short_name': 'Nam Dinh', 'types': ['administrative_area_level_1', 'political']}
 component = {'long_name': 'Ho Chi Minh', 'short_name': 'Ho Chi Minh', 'types': ['administrative_area_level_1', 'political']}
-ad1 = gmaps.geocode(component)
+ad1 = gmaps.geocode('Ninh Bình',components =  {'long_name': 'Ninh Bình', 'short_name': 'Ninh Bình', 'types': ['administrative_area_level_1', 'political'],'country':'VN'})
 print(ad1)
 
 import re

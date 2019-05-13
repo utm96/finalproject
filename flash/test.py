@@ -104,8 +104,12 @@ def planning_home():
         # for _ in listNodeUnschedule:
         #     print(str(_))
         secondSolution = createPlan(deepcopy(listNodeUnschedule),deepcopy(listRoute),gmaps,driver,db)
+        thirdSolution = createPlan(deepcopy(listNodeUnschedule),deepcopy(listRoute),gmaps,driver,db)
 
-        bestSolution = firstSolution if getTotalScore(firstSolution) >= getTotalScore(secondSolution) else secondSolution
+        bestSolution = firstSolution if ((getTotalScore(firstSolution)['score'] > getTotalScore(secondSolution)['score']) or (getTotalScore(firstSolution)['score'] == getTotalScore(secondSolution)['score'] and getTotalScore(firstSolution)['fee'] >= getTotalScore(secondSolution)['fee'])) else secondSolution
+        bestSolution = bestSolution if ((getTotalScore(bestSolution)['score'] > getTotalScore(thirdSolution)['score']) or (getTotalScore(bestSolution)['score'] == getTotalScore(thirdSolution)['score'] and getTotalScore(bestSolution)['fee'] >= getTotalScore(thirdSolution)['fee'])) else thirdSolution
+
+        
         solutionFinal = []
         for day in bestSolution:
             dayFinal = []
@@ -122,10 +126,14 @@ def planning_home():
 
 def getTotalScore(lstRoute):
     score = 0
+    fee = 0
     for route in lstRoute:
+        fee += route[0].fee[route[1].address]
         for i in range(1,len(route)-1):
             score = score + route[i].score
-    return score
+            fee += route[i].fee[route[i+1].address]
+
+    return {'score' : score, "fee" : fee}
 def taxi_fee(dis):
     cost = 5000.0
     if(dis>25000.0):
@@ -154,9 +162,13 @@ def get_level(address_components,gmaps,db):
             print(component)
             # print(address_components)
             ad1 = gmaps.geocode(component)
-            print("-----geocode------")
-            print(ad1)
+            # print("-----geocode------")
+            # print(ad1)
+
+            component['country'] = 'VN'
+            ad1 = gmaps.geocode(component['long_name'],components = component)
             place_id = ad1[0]['place_id']
+            print("===place_id  :" + place_id)
             name = db['region1_detail'].find_one({'place_id':place_id})['Ten tinh,thanh pho']
             result['administrative_area_level_1'] = name
         if ('locality' in component['types']) or ('administrative_area_level_2' in component['types']) or ('route' in component['types']) or ('sublocality_level_1'  in component['types']):

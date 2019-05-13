@@ -44,18 +44,7 @@ with driver.session() as graphDB_Session:
     for region in listRegion1:
 
         for key,value in region['cost_car'].items():
-            
-        # query_create[1] = region['Info'][0]['address_components'][0]['long_name'].replace(" ","").replace("-","_")
-        # query_create[3] = region['Ten tinh,thanh pho']
-        # query_create[5] = str(region['Info'][0]['geometry']['location']['lat']) 
-        # query_create[7] = str(region['Info'][0]['geometry']['location']['lng'])
 
-        # query_car[1] = region['Info'][0]['address_components'][0]['long_name'].replace(" ","").replace("-","_")+'_car'
-        # query_car[3] = region['Ten tinh,thanh pho']
-        # query_train[1] = region['Info'][0]['address_components'][0]['long_name'].replace(" ","").replace("-","_")+'_train'
-        # query_train[3] = region['Ten tinh,thanh pho']        
-        # query_plane[1] = region['Info'][0]['address_components'][0]['long_name'].replace(" ","").replace("-","_")+'_plane'
-        # query_plane[3] = region['Ten tinh,thanh pho']
 
             query_car_route[1] = region['Ten tinh,thanh pho']
             query_car_route[3] = key
