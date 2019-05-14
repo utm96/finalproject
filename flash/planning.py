@@ -203,6 +203,7 @@ def get_level(address_components,gmaps,db):
     result = {}
     i = 0
     name = ''
+    check = False
     for component in address_components:
         if 'administrative_area_level_1'  in component['types']:
             i += 1
@@ -212,13 +213,13 @@ def get_level(address_components,gmaps,db):
                 name = list(db['region1_detail'].find( {"Info.address_components":{"$elemMatch":component}}))[0]['Ten tinh,thanh pho']
                 print("name : =================================" +name)
                 result['administrative_area_level_1'] = name
-    # print(address_components)
+                check = True
             except:
-                pass
-            if(name == ''):
+                check == False
+            from copy import deepcopy
 
+            if(check == False):
                 try:
-                    from copy import deepcopy
 
                     component1 = deepcopy(component)
                     component1['long_name'] = convert(component1['long_name'])
@@ -228,21 +229,49 @@ def get_level(address_components,gmaps,db):
                     name = list(db['region1_detail'].find( {"Info.address_components":{"$elemMatch":component1}}))[0]['Ten tinh,thanh pho']
                     print("name : =================================" +name)
                     result['administrative_area_level_1'] = name
-                # try:
-                #     pass
+                    check  = True
                 except :
-                    
-                    # ad1 = gmaps.geocode(component)
-                    # print("-----geocode------")
-                    component['country'] = 'VN'
-                    ad1 = gmaps.geocode(component['long_name'],components = component)
-                    print(ad1)
-
-                    place_id = ad1[0]['place_id']
-                    print("place_id : " + place_id)
-                    name = db['region1_detail'].find_one({'place_id':place_id})['Ten tinh,thanh pho']
+                    check == False
+            
+            if(check == False):
+                try:
+                    component1 = deepcopy(component)
+                    component1['long_name'] = component1['long_name']  +' Province'
+                    component1['short_name'] = component1['short_name'] + ' Province'
+                    print(component)
+                    print("=====after convert==========")
+                    name = list(db['region1_detail'].find( {"Info.address_components":{"$elemMatch":component1}}))[0]['Ten tinh,thanh pho']
                     print("name : =================================" +name)
                     result['administrative_area_level_1'] = name
+                    check  = True
+                except :
+                    check == False
+            if(check == False):
+                try:
+                    component1 = deepcopy(component)
+                    component1['long_name'] = convert(component1['long_name']) +' Province'
+                    component1['short_name'] = convert(component1['short_name']) + ' Province'
+                    print(component)
+                    print("=====after convert==========")
+                    name = list(db['region1_detail'].find( {"Info.address_components":{"$elemMatch":component1}}))[0]['Ten tinh,thanh pho']
+                    print("name : =================================" +name)
+                    result['administrative_area_level_1'] = name
+                    check  = True
+                except :
+                    check == False            
+            if(check == False):
+                component['country'] = 'VN'
+                ad1 = gmaps.geocode(component['long_name'],components = component)
+                print(ad1)
+
+                place_id = ad1[0]['place_id']
+                print("place_id : " + place_id)
+                name = db['region1_detail'].find_one({'place_id':place_id})['Ten tinh,thanh pho']
+                print("name : =================================" +name)
+                result['administrative_area_level_1'] = name
+
+
+                    
         if ('locality' in component['types']) or ('administrative_area_level_2' in component['types']) or ('route' in component['types']) or ('sublocality_level_1'  in component['types']):
             i +=1
             result['level_'+str(i)] = component['long_name']
@@ -299,7 +328,7 @@ def create_level(graphDB_Session,name,long_name,short_name,lat,lng,level,namePar
     query_create[5] = lat 
     query_create[7] = lng
     query_create[9] = long_name
-    
+
     query_create[11] = short_name
 
     query_car[1] = fomat_text(name)+'_car'
@@ -410,8 +439,8 @@ def create_train_distance(graphDB_Session,long_name,listTrain_cost,listTrain_tim
     print(listTrain_cost)
     print(listTrain_time)
     for k,v in listTrain_cost.items():
-        query_train_route = ["MATCH (a:TrainStation {name:'","","'}),(b:TrainStop {name:\"","","\"}) CREATE (a)-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving'}]->(b)"]
-        query_train_route1 = ["MATCH (a:TrainStation {name:'","","'}),(b:TrainStop {name:\"","","\"}) CREATE (a)<-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving'}]-(b)"]
+        query_train_route = ["MATCH (a:TrainStation {name:'","","'}),(b:TrainStop {name:\"","","\"}) CREATE (a)-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving', hop : 5 , price :","","}]->(b)"]
+        query_train_route1 = ["MATCH (a:TrainStation {name:'","","'}),(b:TrainStop {name:\"","","\"}) CREATE (a)<-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving', hop : 5, price :","","}]-(b)"]
         query_train_route[1] = long_name
         query_train_route[3] = k
         query_train_route[5] = str(v)
@@ -420,6 +449,7 @@ def create_train_distance(graphDB_Session,long_name,listTrain_cost,listTrain_tim
         query_train_route[11] = str(listTrain_time[k])
         query_train_route[13] = str(listTrain_time[k])
         query_train_route[15] = str(listTrain_time[k])
+        query_train_route[17] = str(v)
 
         query_train_route1[1] = long_name
         query_train_route1[3] = k
@@ -429,13 +459,15 @@ def create_train_distance(graphDB_Session,long_name,listTrain_cost,listTrain_tim
         query_train_route1[11] = str(listTrain_time[k])
         query_train_route1[13] = str(listTrain_time[k])
         query_train_route1[15] = str(listTrain_time[k])
+        query_train_route1[17] = str(v)
+
         graphDB_Session.run(''.join(query_train_route))
         graphDB_Session.run(''.join(query_train_route1))
 
 def create_car_distance(graphDB_Session,long_name,listCar_cost,listCar_time):
     for k,v in listCar_cost.items():
-        query_car_route = ["MATCH (a:CarStation {name:'","","'}),(b:CarStop {address:\"","","\"}) CREATE (a)-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving'}]->(b)"]
-        query_car_route1 = ["MATCH (a:CarStation {name:'","","'}),(b:CarStop {address:\"","","\"}) CREATE (a)<-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving'}]-(b)"]
+        query_car_route = ["MATCH (a:CarStation {name:'","","'}),(b:CarStop {address:\"","","\"}) CREATE (a)-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving', hop : 5 , price :","","}]->(b)"]
+        query_car_route1 = ["MATCH (a:CarStation {name:'","","'}),(b:CarStop {address:\"","","\"}) CREATE (a)<-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving', hop : 5 , price :","","}]-(b)"]
 
         query_car_route[1] = long_name
         query_car_route[3] = k
@@ -445,6 +477,7 @@ def create_car_distance(graphDB_Session,long_name,listCar_cost,listCar_time):
         query_car_route[11] = str(listCar_time[k])
         query_car_route[13] = str(listCar_time[k])
         query_car_route[15] = str(listCar_time[k])
+        query_car_route[17] = str(v)
 
         query_car_route1[1] = long_name
         query_car_route1[3] = k
@@ -454,14 +487,16 @@ def create_car_distance(graphDB_Session,long_name,listCar_cost,listCar_time):
         query_car_route1[11] = str(listCar_time[k])
         query_car_route1[13] = str(listCar_time[k])
         query_car_route1[15] = str(listCar_time[k])
+        query_car_route1[17] = str(v)
+
         graphDB_Session.run(''.join(query_car_route))
         graphDB_Session.run(''.join(query_car_route1))
 
 
 def create_plane_distance(graphDB_Session,long_name,listPlane_cost,listPlane_time):
     for k,v in listPlane_cost.items():
-        query_plane_route = ["MATCH (a:PlaneStation {name:'","","'}),(b:Airport {code:\"","","\"}) CREATE (a)-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving'}]->(b)"]
-        query_plane_route1 = ["MATCH (a:PlaneStation {name:'","","'}),(b:Airport {code:\"","","\"}) CREATE (a)<-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving'}]-(b)"]
+        query_plane_route = ["MATCH (a:PlaneStation {name:'","","'}),(b:Airport {code:\"","","\"}) CREATE (a)-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving', hop : 5, price :","","}]->(b)"]
+        query_plane_route1 = ["MATCH (a:PlaneStation {name:'","","'}),(b:Airport {code:\"","","\"}) CREATE (a)<-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving', hop : 5, price :","","}]-(b)"]
 
         query_plane_route[1] = long_name
         query_plane_route[3] = k
@@ -471,6 +506,7 @@ def create_plane_distance(graphDB_Session,long_name,listPlane_cost,listPlane_tim
         query_plane_route[11] = str(listPlane_time[k])
         query_plane_route[13] = str(listPlane_time[k])
         query_plane_route[15] = str(listPlane_time[k])
+        query_plane_route[17] = str(v)
 
         query_plane_route1[1] = long_name
         query_plane_route1[3] = k
@@ -480,6 +516,8 @@ def create_plane_distance(graphDB_Session,long_name,listPlane_cost,listPlane_tim
         query_plane_route1[11] = str(listPlane_time[k])
         query_plane_route1[13] = str(listPlane_time[k])
         query_plane_route1[15] = str(listPlane_time[k])
+        query_plane_route1[17] = str(v)
+
         graphDB_Session.run(''.join(query_plane_route))
         graphDB_Session.run(''.join(query_plane_route1))
 

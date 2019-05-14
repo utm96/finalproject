@@ -391,32 +391,40 @@ color: black
                         var h2 = document.createElement('h6')
                         h2.innerHTML = key + "time : " + time + ", price : "+ price;
                         e.append(h2)
-                        e.onclick = function () {
-                            var v = this.querySelector("inputs").value;
-                            loadPath(v,lstPath);
-                        };
+                        //ve duong start
+                        // e.onclick = function () {
+                        //     var v = this.querySelector("input").value;
+                        //     loadPath(v,lstPath);
+                        // };
+
+                    
                         detail['way'].forEach((way)=>{
-                          console.log(way['latDeparture']);
-                      var lat = way['latDeparture'].toString();
-                      var lng = way['lngDeparture'].toString();
+                      //     console.log(way['latDeparture']);
+                      // var lat = way['latDeparture'].toString();
+                      // var lng = way['lngDeparture'].toString();
 
-                      var flightPlanCoordinates = [
-                        {lat: way['latDeparture'], lng: way['lngDeparture']},
-                        {lat: way['latArrival'], lng: way['lngArrival']}
+                      // var flightPlanCoordinates = [
+                      //   {lat: way['latDeparture'], lng: way['lngDeparture']},
+                      //   {lat: way['latArrival'], lng: way['lngArrival']}
 
-                        // {lat: -18.142, lng: 178.431},
-                        // {lat: -27.467, lng: 153.027}
-                      ];
-                      map.setCenter({lat: way['latDeparture'], lng: way['lngDeparture']});
-                      map.setZoom(8);
-                      var path = new google.maps.Polyline({
-                        path: flightPlanCoordinates,
-                        geodesic: true,
-                        strokeColor: '#FF0000',
-                        strokeOpacity: 1.0,
-                        strokeWeight: 2
-                      });
-                      lstPath.push(path);
+                      //   // {lat: -18.142, lng: 178.431},
+                      //   // {lat: -27.467, lng: 153.027}
+                      // ];
+                      // map.setCenter({lat: way['latDeparture'], lng: way['lngDeparture']});
+                      // map.setZoom(8);
+                      // var path = new google.maps.Polyline({
+                      //   path: flightPlanCoordinates,
+                      //   geodesic: true,
+                      //   strokeColor: '#FF0000',
+                      //   strokeOpacity: 1.0,
+                      //   strokeWeight: 2
+                      // });
+                      // lstPath.push(path);
+
+
+                      //ve duong end
+
+
                       // path.setMap(map);
                       // var marker = new google.maps.Marker({
                       //         map: map,
