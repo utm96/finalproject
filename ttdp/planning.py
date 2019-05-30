@@ -222,62 +222,68 @@ def fomat_text(text):
     return text
 def create_level(graphDB_Session,name,long_name,short_name,lat,lng,level,nameParent,levelParent):
     query_create  = ['CREATE (',"",":"+level+" { name:'","","',lat : ","",", lng:","",", long_name:'","","', short_name:'","","'})"]
-    query_car  = ['CREATE (',"",":CarStation { name:'","","', long_name:'","","', short_name:'","","'})"]
-    query_train  = ['CREATE (',"",":TrainStation { name:'","","', long_name:'","","', short_name:'","","'})"]
-    query_plane  = ['CREATE (',"",":PlaneStation { name:'","","', long_name:'","","', short_name:'","","'})"]
+    query_car  = ['CREATE (',"",":CarStation { name:'","","',lat : ","",", lng:","",", long_name:'","","', short_name:'","","'})"]
+    query_train  = ['CREATE (',"",":TrainStation { name:'","","',lat : ","",", lng:","",", long_name:'","","', short_name:'","","'})"]
+    query_plane  = ['CREATE (',"",":PlaneStation { name:'","","',lat : ","",", lng:","",", long_name:'","","', short_name:'","","'})"]
     # query_car  = ['CREATE (',"",":BoardStation { name:'","","'})"]
 
-    query_car_relation ="MATCH (a:"+level+"),(b:CarStation) WHERE a.name = \""+name+"\" and a.name = b.name CREATE (a)-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 }]->(b)"
-    query_train_relation ="MATCH (a:"+level+"),(b:TrainStation) WHERE a.name = \""+name+"\" and  a.name = b.name CREATE (a)-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 }]->(b)"
-    query_plane_relation ="MATCH (a:"+level+"),(b:PlaneStation) WHERE a.name = \""+name+"\" and  a.name = b.name CREATE (a)-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 }]->(b)"
-    query_car1_relation ="MATCH (a:"+level+"),(b:CarStation) WHERE a.name = \""+name+"\" and  a.name = b.name CREATE (a)<-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 }]-(b)"
-    query_train1_relation ="MATCH (a:"+level+"),(b:TrainStation) WHERE a.name = \""+name+"\" and a.name = b.name CREATE (a)<-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 }]-(b)"
-    query_plane1_relation ="MATCH (a:"+level+"),(b:PlaneStation) WHERE a.name = \""+name+"\" and a.name = b.name CREATE (a)<-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 }]-(b)"
+    query_car_relation ="MATCH (a:"+level+"),(b:CarStation) WHERE a.name = \""+name+"\" and a.name = b.name CREATE (a)-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 , hop : 0 }]->(b)"
+    query_train_relation ="MATCH (a:"+level+"),(b:TrainStation) WHERE a.name = \""+name+"\" and  a.name = b.name CREATE (a)-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 , hop : 0 }]->(b)"
+    query_plane_relation ="MATCH (a:"+level+"),(b:PlaneStation) WHERE a.name = \""+name+"\" and  a.name = b.name CREATE (a)-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 , hop : 0 }]->(b)"
+    query_car1_relation ="MATCH (a:"+level+"),(b:CarStation) WHERE a.name = \""+name+"\" and  a.name = b.name CREATE (a)<-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 , hop : 0 }]-(b)"
+    query_train1_relation ="MATCH (a:"+level+"),(b:TrainStation) WHERE a.name = \""+name+"\" and a.name = b.name CREATE (a)<-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 , hop : 0 }]-(b)"
+    query_plane1_relation ="MATCH (a:"+level+"),(b:PlaneStation) WHERE a.name = \""+name+"\" and a.name = b.name CREATE (a)<-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 , hop : 0 }]-(b)"
     query_parent_relation ="MATCH (a:"+levelParent+"),(b:"+level+") WHERE a.name ='"+nameParent+"' and b.long_name = '"+long_name+"' CREATE (a)-[r:child]->(b)"
 
     #1 :node, 3 : tên , 5 :lat , 7 :lng , 9 : long_name, 11: short_name
-    query_create[1] = fomat_text(name)
+    query_create[1] = b(name)
     query_create[3] = name
     query_create[5] = lat 
     query_create[7] = lng
     query_create[9] = long_name
     query_create[11] = short_name
 
-    query_car[1] = fomat_text(name)+'_car'
+    query_car[1] = b(name)+'_car'
     query_car[3] = name
-    query_car[5] = long_name
-    query_car[7] = short_name
+    query_car[5] = lat 
+    query_car[7] = lng
+    query_car[9] = long_name
+    query_car[11] = short_name
 
-    query_train[1] = fomat_text(name)+'_train'
+    query_train[1] = b(name)+'_train'
     query_train[3] = name       
-    query_train[5] = long_name
-    query_train[7] = short_name
+    query_train[5] = lat
+    query_train[7] = lng
+    query_train[9] = long_name
+    query_train[11] = short_name
 
-
-    query_plane[1] = fomat_text(name)+'_plane'
+    query_plane[1] = b(name)+'_plane'
     query_plane[3] = name
-    query_plane[5] = long_name
-    query_plane[7] = short_name
+    query_plane[5] = lat
+    query_plane[7] = lng
+    query_plane[9] = long_name
+    query_plane[11] = short_name
 
-    # print(''.join(query_car))
-    # print(''.join(query_create))
+    print(''.join(query_car))
+    print(''.join(query_create))
 
-    # print(''.join(query_plane))
+    print(''.join(query_plane))
 
     graphDB_Session.run(''.join(query_create))
 
     graphDB_Session.run(''.join(query_plane))
     graphDB_Session.run(''.join(query_train))
     graphDB_Session.run(''.join(query_car))
-    # print(query_car_relation)
+    print(query_car_relation)
     graphDB_Session.run(query_car_relation)
     graphDB_Session.run(query_car1_relation)
     graphDB_Session.run(query_train_relation)
     graphDB_Session.run(query_train1_relation)
     graphDB_Session.run(query_plane_relation)
     graphDB_Session.run(query_plane1_relation)
-    # print(query_parent_relation)
+    print(query_parent_relation)
     graphDB_Session.run(query_parent_relation)
+
 
 
 def maxtrix_distance(lat,lng,mode,db,gmaps):

@@ -15,7 +15,7 @@ class Node:
     def distance(self,fee,id):
         self.fee[id] = fee
     def  __str__(self):
-        return self.address +","+str(self.startTime) + "," + str(self.endTime) + ", lastestTime : " +str(self.lastestTime) 
+        return self.address +","+str(self.startTime) + "," + str(self.endTime) + ", lastestTime : " +str(self.lastestTime) + ", len fee: " + str(len(self.fee))
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 
             sort_keys=True, indent=4)

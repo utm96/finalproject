@@ -50,7 +50,7 @@ from neo4j import GraphDatabase
 gmaps = googlemaps.Client(key='AIzaSyCbhGuXbFO7RvpyYPCeZWlkzzTE2rBZbYc')
 # {'long_name': 'Nam Dinh', 'short_name': 'Nam Dinh', 'types': ['administrative_area_level_1', 'political']}
 component = {'long_name': 'Ho Chi Minh', 'short_name': 'Ho Chi Minh', 'types': ['administrative_area_level_1', 'political']}
-ad1 = gmaps.geocode('Ninh Bình',components =  {'long_name': 'Ninh Bình', 'short_name': 'Ninh Bình', 'types': ['administrative_area_level_1', 'political'],'country':'VN'})
+ad1 = gmaps.geocode('FLC Samson Beach & Golf Resort, Quảng Cư, Sầm Sơn, Thanh Hoa, Vietnam')
 print(ad1)
 
 import re

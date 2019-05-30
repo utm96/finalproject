@@ -20,23 +20,23 @@ collection = 'aiport_detail'
 listAirport = list(db[collection].find({}))
 today = DT.date.today()
 theweekafter = today+ DT.timedelta(days=7)
-# for departure in listAirport:
-#     for arrival in listAirport:
-#         if(departure != arrival):
-#             url_plane = plane(departure['MaSanBay'],arrival['MaSanBay'],theweekafter)
-#             print(url_plane)
-#             data_plane = {"project":"scraper","spider":"plane_detail","url":url_plane,"depart":departure['MaSanBay'],"dest":arrival['MaSanBay']}
-#             url = 'http://127.0.0.1:6800/schedule.json'
-#             req_plane = grequests.post(url,data=data_plane)
-# # grequests.map([req_car,req_train,req_plane])
-#             grequests.map([req_plane])
-
-url_plane = plane('HAN','DIN',theweekafter)
-print(url_plane)
-data_plane = {"project":"scraper","spider":"plane_detail","url":url_plane,"depart":'HAN',"dest":'DIN'}
-url = 'http://127.0.0.1:6800/schedule.json'
-req_plane = grequests.post(url,data=data_plane)
+for departure in listAirport:
+    for arrival in listAirport:
+        if(departure != arrival):
+            url_plane = plane(departure['MaSanBay'],arrival['MaSanBay'],theweekafter)
+            print(url_plane)
+            data_plane = {"project":"scraper","spider":"plane_detail","url":url_plane,"depart":departure['MaSanBay'],"dest":arrival['MaSanBay']}
+            url = 'http://127.0.0.1:6800/schedule.json'
+            req_plane = grequests.post(url,data=data_plane)
 # grequests.map([req_car,req_train,req_plane])
-grequests.map([req_plane])
+            grequests.map([req_plane])
+
+# url_plane = plane('HAN','DIN',theweekafter)
+# print(url_plane)
+# data_plane = {"project":"scraper","spider":"plane_detail","url":url_plane,"depart":'HAN',"dest":'DIN'}
+# url = 'http://127.0.0.1:6800/schedule.json'
+# req_plane = grequests.post(url,data=data_plane)
+# # grequests.map([req_car,req_train,req_plane])
+# grequests.map([req_plane])
 
 

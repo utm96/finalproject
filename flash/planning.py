@@ -16,27 +16,27 @@ def upateF(listNodeUnschedule,listRoute,listOption,gmaps,driver,db):
     for node in listNodeUnschedule:
         for m in range(len(listRoute)):
             route = listRoute[m]
-            print("route : "+str(m))
+            #print("route : "+str(m))
             for i in range(1,len(route)):
-                print("position " + str(i))
+                #print("position " + str(i))
                 resultCheckInsert = canInsert(node,route,i,gmaps,driver,db)
                 if (resultCheckInsert['check']):
                     o = Option(m,i,node,ration(route,node,i,gmaps,driver,db),0,resultCheckInsert['route'])
                     listOption.append(o)
-                    print("len option : " +str(len(listOption)))
+                    #print("len option : " +str(len(listOption)))
     
     listOption = sorted(listOption, key=lambda x: x.sumRation, reverse=True)
-    print("list option : ---------------------------")
-    for o in listOption:
-        print(o)
+    #print("list option : ---------------------------")
+    # for o in listOption:
+        #print(o)
     listOption = listOption[:(len(listOption)+2)//2]
     #sorte listOption by the ration descending
     #get the f first best option
     #get rid of duplicate
 
-    print("list option  selected: ---------------------------")
-    for o in listOption:
-        print(o)
+    #print("list option  selected: ---------------------------")
+    # for o in listOption:
+        #print(o)
     return listOption
 
 
@@ -50,8 +50,8 @@ def setStartEnd(nodePrev,node,gmaps,driver,db):
         node.endTime = node.startTime + node.serviceTime
 
 def canInsert(node,route,i,gmaps,driver,db):
-    print(route)
-    print(node)
+    #print(route)
+    #print(node)
     nodePrev = route[i-1]
     nodePost = route[i]
 
@@ -66,7 +66,7 @@ def canInsert(node,route,i,gmaps,driver,db):
         node.endTime = node.startTime + node.serviceTime
     subCon1 = node.startTime >= node.earliestTime
     subCon2 = node.endTime  <= node.lastestTime
-    print("startCondition : " + str(subCon1) + " , endCondition : " + str(subCon2))
+    #print("startCondition : " + str(subCon1) + " , endCondition : " + str(subCon2))
     check  = subCon1 and subCon2
 
 
@@ -92,27 +92,28 @@ def canInsert(node,route,i,gmaps,driver,db):
 
 
     # condition1 = nodePost.earliestTime - node.serviceTime - getFee(node,nodePost,gmaps,driver,db)> node.earliestTime
-    # print("con1 :==========="+str(condition1) + "===========================")
+    # #print("con1 :==========="+str(condition1) + "===========================")
     # condition2 = node.earliestTime > nodePrev.earliestTime + nodePrev.serviceTime + getFee(nodePrev,node,gmaps,driver,db)
-    # print("con2 :==========="+str(condition2) + "===========================")
-    # print("node.earliestTime : "+ str(node.earliestTime))
-    # print("nodePrev.earliestTime :"+ str(nodePrev.earliestTime))
-    # print("getFee(nodePrev,node,gmaps,driver,db): "+str(getFee(nodePrev,node,gmaps,driver,db)))
-    # print("nodePrev.serviceTime : "+ str(nodePrev.serviceTime))
+    # #print("con2 :==========="+str(condition2) + "===========================")
+    # #print("node.earliestTime : "+ str(node.earliestTime))
+    # #print("nodePrev.earliestTime :"+ str(nodePrev.earliestTime))
+    # #print("getFee(nodePrev,node,gmaps,driver,db): "+str(getFee(nodePrev,node,gmaps,driver,db)))
+    # #print("nodePrev.serviceTime : "+ str(nodePrev.serviceTime))
     # #condition1 : nodePost['timeStart'] - node['serviceTime'] - fee(node-nodePost)> node['earliestTime'] > nodePrev['timeStart] + nodePre['timeService'] + fee[nodePre - node]
     # if (nodePost.earliestTime - node.serviceTime - getFee(node,nodePost,gmaps,driver,db)> node.earliestTime and   node.earliestTime > nodePrev.earliestTime + nodePrev.serviceTime + getFee(nodePrev,node,gmaps,driver,db)):
     #     # listOption add {node ,route,i}
-    #     print("can insert")
+    #     #print("can insert")
     #     return True
     # else:
-    #     print("cant insert")
+    #     #print("cant insert")
 
     #     return False
-    print("route_check : "+ str(check))
+    #print("route_check : "+ str(check))
     return {'check': check, 'route' : routeCheck}
 
 def getFee(nodeDeparture,nodeArrival,gmaps,driver,db):
-    print(str(nodeArrival))
+    #print(str(nodeArrival))
+    # print(nodeDeparture.fee)
     if (nodeArrival.address in nodeDeparture.fee):
         return nodeDeparture.fee[nodeArrival.address]
     # x = controllerFindRoute()
@@ -148,11 +149,11 @@ def createPlan(listNodeUnschedule,lstRoute,gmaps,driver,db):
     #solution
     lstOption = []
     lstOption = upateF(listNodeUnschedule,lstRoute,lstOption,gmaps,driver,db)
-    print("lstOption : ")
-    print(lstOption)
+    ##print("lstOption : ")
+    #print(lstOption)
     while len(lstOption)>0:
         option = selectOption(lstOption)
-        print("do insert" + str(option))
+        #print("do insert" + str(option))
         doInsert(lstRoute,option)
         lstOption = []
         listNodeUnschedule.remove(option.node)
@@ -163,7 +164,7 @@ def createPlan(listNodeUnschedule,lstRoute,gmaps,driver,db):
 
         
 def doInsert(lstRoute,option):
-    print(option.day)
+    #print(option.day)
     route = lstRoute[option.day]
     route[option.position : ] = option.route
            
@@ -207,11 +208,11 @@ def get_level(address_components,gmaps,db):
     for component in address_components:
         if 'administrative_area_level_1'  in component['types']:
             i += 1
-            print("========Component========================")
-            print(component)
+            #print("========Component========================")
+            #print(component)
             try: 
                 name = list(db['region1_detail'].find( {"Info.address_components":{"$elemMatch":component}}))[0]['Ten tinh,thanh pho']
-                print("name : =================================" +name)
+                #print("name : =================================" +name)
                 result['administrative_area_level_1'] = name
                 check = True
             except:
@@ -224,10 +225,10 @@ def get_level(address_components,gmaps,db):
                     component1 = deepcopy(component)
                     component1['long_name'] = convert(component1['long_name'])
                     component1['short_name'] = convert(component1['short_name'])
-                    print(component)
-                    print("=====after convert==========")
+                    #print(component)
+                    #print("=====after convert==========")
                     name = list(db['region1_detail'].find( {"Info.address_components":{"$elemMatch":component1}}))[0]['Ten tinh,thanh pho']
-                    print("name : =================================" +name)
+                    #print("name : =================================" +name)
                     result['administrative_area_level_1'] = name
                     check  = True
                 except :
@@ -238,10 +239,10 @@ def get_level(address_components,gmaps,db):
                     component1 = deepcopy(component)
                     component1['long_name'] = component1['long_name']  +' Province'
                     component1['short_name'] = component1['short_name'] + ' Province'
-                    print(component)
-                    print("=====after convert==========")
+                    #print(component)
+                    #print("=====after convert==========")
                     name = list(db['region1_detail'].find( {"Info.address_components":{"$elemMatch":component1}}))[0]['Ten tinh,thanh pho']
-                    print("name : =================================" +name)
+                    #print("name : =================================" +name)
                     result['administrative_area_level_1'] = name
                     check  = True
                 except :
@@ -251,10 +252,10 @@ def get_level(address_components,gmaps,db):
                     component1 = deepcopy(component)
                     component1['long_name'] = convert(component1['long_name']) +' Province'
                     component1['short_name'] = convert(component1['short_name']) + ' Province'
-                    print(component)
-                    print("=====after convert==========")
+                    #print(component)
+                    #print("=====after convert==========")
                     name = list(db['region1_detail'].find( {"Info.address_components":{"$elemMatch":component1}}))[0]['Ten tinh,thanh pho']
-                    print("name : =================================" +name)
+                    #print("name : =================================" +name)
                     result['administrative_area_level_1'] = name
                     check  = True
                 except :
@@ -262,12 +263,12 @@ def get_level(address_components,gmaps,db):
             if(check == False):
                 component['country'] = 'VN'
                 ad1 = gmaps.geocode(component['long_name'],components = component)
-                print(ad1)
+                #print(ad1)
 
                 place_id = ad1[0]['place_id']
-                print("place_id : " + place_id)
+                #print("place_id : " + place_id)
                 name = db['region1_detail'].find_one({'place_id':place_id})['Ten tinh,thanh pho']
-                print("name : =================================" +name)
+                #print("name : =================================" +name)
                 result['administrative_area_level_1'] = name
 
 
@@ -351,24 +352,24 @@ def create_level(graphDB_Session,name,long_name,short_name,lat,lng,level,namePar
     query_plane[7] = short_name
     query_plane[9] = lat
     query_plane[11] = lng
-    # print(''.join(query_car))
-    # print(''.join(query_create))
+    # #print(''.join(query_car))
+    # #print(''.join(query_create))
 
-    # print(''.join(query_plane))
+    # #print(''.join(query_plane))
 
     graphDB_Session.run(''.join(query_create))
 
     graphDB_Session.run(''.join(query_plane))
     graphDB_Session.run(''.join(query_train))
     graphDB_Session.run(''.join(query_car))
-    # print(query_car_relation)
+    # #print(query_car_relation)
     graphDB_Session.run(query_car_relation)
     graphDB_Session.run(query_car1_relation)
     graphDB_Session.run(query_train_relation)
     graphDB_Session.run(query_train1_relation)
     graphDB_Session.run(query_plane_relation)
     graphDB_Session.run(query_plane1_relation)
-    # print(query_parent_relation)
+    # #print(query_parent_relation)
     graphDB_Session.run(query_parent_relation)
 
 
@@ -392,7 +393,7 @@ def maxtrix_distance(lat,lng,mode,db,gmaps):
         name = 'Ten ga'
     listA = dict()
     listStation = list(db[db_collection].find({}))
-    # print(len(listStation))
+    # #print(len(listStation))
     for station in listStation:
         db[db_collection].update_one({name:station[name]},{'$set':  { "lat": station['Info'][0]['geometry']["location"]["lat"], "lng": station['Info'][0]['geometry']["location"]["lng"] }})
         listA[station[name]] = [station['Info'][0]['geometry']["location"]["lat"],station['Info'][0]['geometry']["location"]["lng"]]
@@ -428,7 +429,7 @@ def maxtrix_distance(lat,lng,mode,db,gmaps):
 # collection = 'region1'
 # c = 'test'
 # s = list(db[collection].find({}))
-# print(len(s))
+# #print(len(s))
 
 
 
@@ -436,8 +437,8 @@ def maxtrix_distance(lat,lng,mode,db,gmaps):
 # for station in s:
 
 def create_train_distance(graphDB_Session,long_name,listTrain_cost,listTrain_time):
-    print(listTrain_cost)
-    print(listTrain_time)
+    #print(listTrain_cost)
+    #print(listTrain_time)
     for k,v in listTrain_cost.items():
         query_train_route = ["MATCH (a:TrainStation {name:'","","'}),(b:TrainStop {name:\"","","\"}) CREATE (a)-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving', hop : 5 , price :","","}]->(b)"]
         query_train_route1 = ["MATCH (a:TrainStation {name:'","","'}),(b:TrainStop {name:\"","","\"}) CREATE (a)<-[r:route { min_price:","",", max_price :","",", ave_price :" ,"", ",min_time:","",", time : ","",", ave_time : ","",", type : 'driving', hop : 5, price :","","}]-(b)"]
@@ -526,7 +527,7 @@ def create_plane_distance(graphDB_Session,long_name,listPlane_cost,listPlane_tim
 # geocode_result = gmaps.geocode(m)
 # db['test'].insert_one({'info':geocode_result})
 # x = (get_level(reversed(geocode_result[0]['address_components']),gmaps,db))
-# print(x)
+# #print(x)
 # # match (lv1:administrative_area_level_1) -[:parent]-(lv2:lv2 {long_name :'HaNoi'}) return lv2
 
 def insert_level(driver,gmaps,db,x):
@@ -542,14 +543,14 @@ def insert_level(driver,gmaps,db,x):
             listGeoCodeString.append(geocode_string)
             y['level_'+str(i)] = x['level_'+str(i)]
             query +=  "-[:child]->(lv"+str(i)+" :level_"+str(i)+" {name:'"+geocode_string+"'})"
-            # print(query + "return lv"+str(i))
+            # #print(query + "return lv"+str(i))
             results = graphDB_Session.run(query + "return lv"+str(i))
             records = []
             for record in results:
                 records.append(record)
-            # print("------------------"+str(len(records)))
+            # #print("------------------"+str(len(records)))
             if(len(records) == 0):
-                # print(geocode_string)
+                # #print(geocode_string)
                 info = gmaps.geocode(geocode_string)[0]
                 long_name = info['address_components'][0]['long_name']
                 short_name = info['address_components'][0]['short_name']
@@ -595,28 +596,28 @@ def query_route(typeTransport,WeightProperty,nameDeparture,levelDeparture,nameAr
 
     query = ["MATCH (start:",nameType,"{name:\"", nameDeparture , "\"}), (end:" ,levelArrival,"{name:\"", nameArrival 
         ,"\"}) CALL algo.shortestPath.stream(start, end, \"" , WeightProperty,"\" ,{nodeQuery:' MATCH path=(a)-[:child*]->(:",levelDeparture,"{name : \"",nameDeparture,"\"}) WITH path MATCH (n) WHERE not n IN nodes(path) RETURN id(n) as id',relationshipQuery:'MATCH (n)-[r]->(m) where not (type(r) =\"child\") RETURN id(n) as source, id(m) as target, r.",WeightProperty," as weight',graph:'cypher'}) YIELD nodeId, cost  match (node) where id(node) = nodeId RETURN node.name AS name,nodeId, cost"]
-    # print("".join(query))
+    # #print("".join(query))
 
 
     # query = ["MATCH (start:",nameType,"{name:\"", nameDeparture , "\"}), (end:" ,levelArrival,"{name:\"", nameArrival 
     #     ,"\"}) CALL algo.kShortestPaths.stream(start, end, 3, \"" , WeightProperty,"\" ,{nodeQuery:'MATCH (n) WHERE not(labels(n) = [\"",levelDeparture,"\"] and n.name = \"",nameDeparture,"\") RETURN id(n) as id',relationshipQuery:'MATCH (n)-[r]->(m) RETURN id(n) as source, id(m) as target, r.",WeightProperty," as weight',graph:'cypher'}) YIELD index, nodeIds, costs RETURN [node in algo.getNodesById(nodeIds) | node.name] AS places,nodeIds,costs,reduce(acc = 0.0, cost in costs | acc + cost) AS totalCost"]
-    # print("".join(query))
+    # #print("".join(query))
     results = graphDB_Session.run("".join(query))
 
     records = []
     for record in results:
         records.append(record)
-    # print(records)
+    # #print(records)
 # MATCH (a)-[r]->(b) where id(a) = 562 and id(b) = 127 return r
     if (len(records)>0):
         fistNode = records[1]['nodeId']
         lastNode = records[-3]['nodeId']
-        # print(fistNode)
+        # #print(fistNode)
         #get info lastnode and first node
         node_info = {}
         node_info_in_path = graphDB_Session.run("MATCH (a),(b) where id(a) = " +str(fistNode)+" and id(b) = "+str(lastNode)+" return a.lat as firstLat, a.lng as firstLng,b.lat as lastLat, b.lng as lastLng ")
         for _ in node_info_in_path:
-            # print(_['k'])
+            # #print(_['k'])
             node_info['firstLat'] = _['firstLat']
             node_info['lastLat'] = _['lastLat']
             node_info['firstLng'] = _['firstLng']
@@ -631,9 +632,9 @@ def query_route(typeTransport,WeightProperty,nameDeparture,levelDeparture,nameAr
             way_info = graphDB_Session.run("MATCH (a)-[r]->(b) where id(a) = " +str(a)+" and id(b) = "+str(b)+" return r.type,r."+WeightProperty+" as cost, TYPE(r) as k,a.lat as latDeparture,a.lng as lngDeparture,b.lat as latArrival,b.lng as lngArrival")
             info = {}
             for _ in way_info:
-                # print(_['k'])
+                # #print(_['k'])
                 info['type'] = _['r.type']
-                # print(info)
+                # #print(info)
                 info[WeightProperty] = _['cost']
 
                 # latDeparture,a.lng as lngDeparture,b.lat as latArrival,b.lng as lngArrival
@@ -666,32 +667,32 @@ def query_route(typeTransport,WeightProperty,nameDeparture,levelDeparture,nameAr
                     listWay1.insert(-1,listway[i])    
             else:
                 listWay1.insert(-1,listway[i])
-        # print("----------------list1------------------")
-        # print(listWay1)
+        # #print("----------------list1------------------")
+        # #print(listWay1)
 
         listWayFinal = []
         for i in range(len(listWay1)-1):
-            # print (i)
+            # #print (i)
             if(listWay1[i]['type'] == 'driving'):
                 if (listWay1[i+1]['type'] != 'driving'):
                     listWayFinal.append(listWay1[i])
                 else :
-                    # print("dfđ")
-                    # print(listway[i])
+                    # #print("dfđ")
+                    # #print(listway[i])
 
-                    # print(listway[i+1])
+                    # #print(listway[i+1])
                     listWay1[i+1]['Departure'] = listWay1[i]['Departure']
                     listWay1[i+1]['latDeparture'] = listWay1[i]['latDeparture']
                     listWay1[i+1]['lngDeparture'] = listWay1[i]['lngDeparture']
-                    # print(listWay1[i])
+                    # #print(listWay1[i])
                     # listWayFinal.append(listWay1[i])
                     # # i = i+1
                     # continue
             else:
                 listWayFinal.append(listWay1[i])
         listWayFinal.append(listWay1[-1])
-        # print("----------------listFinal------------------")
-        # print(listWayFinal)
+        # #print("----------------listFinal------------------")
+        # #print(listWayFinal)
 
         return {'way' : listWayFinal , 'node_info': None}
     else :
@@ -703,33 +704,37 @@ def find_route(departure,arrival,gmaps,driver,db):
 
     m1 = departure
     m2 = arrival
+    #print("==========m2=============")
+    #print(m2)
     geocode_result1 = gmaps.geocode(m1)
     geocode_result2 = gmaps.geocode(m2)
-    # print(geocode_result2)
+    #print("=====geocode 2 ================")
+    #print(geocode_result2)
     # db['test'].insert_one({'info':geocode_result})
     depart_level = (get_level(reversed(geocode_result1[0]['address_components']),gmaps,db))
     arrival_level = (get_level(reversed(geocode_result2[0]['address_components']),gmaps,db))
-    # print(depart_level.keys())
+    # #print(depart_level.keys())
+    #print(arrival_level.keys())
+   
     nameDeparture = ", ".join(reversed(list(depart_level.values())))
     levelDeparture = list(depart_level.keys())[-1]
     nameArrival = ", ".join(reversed(list(arrival_level.values())))
     levelArrival = list(arrival_level.keys())[-1]
-
-    # print ( nameDeparture + "-=------" +levelDeparture )
-    # print ( nameArrival + "-=------" +levelArrival )
+    # #print ( nameDeparture + "-=------" +levelDeparture )
+    # #print ( nameArrival + "-=------" +levelArrival )
     insert_level(driver,gmaps,db,depart_level)
     insert_level(driver,gmaps,db,arrival_level)
     with driver.session() as graphDB_Session:
         way = query_route(1,'min_time',nameDeparture,levelDeparture,nameArrival,levelArrival,gmaps,graphDB_Session)
         if way != None:
-            # print(way)
+            # #print(way)
             a = [geocode_result1[0]['geometry']['location']['lat'],geocode_result1[0]['geometry']['location']['lng']]
             b = [way['way'][0]['latDeparture'],way['way'][0]['lngDeparture']]
-            # print(a)
-            # print(b)
+            # #print(a)
+            # #print(b)
             # if(len(way['way'])>1):
             # start = gmaps.distance_matrix([a],[b])
-            # print(start)
+            # #print(start)
             # start_detail['departure'] = nameDeparture
             # start_detail['arrival'] = way[0]['departure']
             # end = gmaps.distance_matrix([[way['way'][-1]['latDeparture'],way['way'][-1]['lngDeparture']]],[[geocode_result2[0]['geometry']['location']['lat'],geocode_result2[0]['geometry']['location']['lng']]])
@@ -752,11 +757,11 @@ def find_route(departure,arrival,gmaps,driver,db):
             #             i = i+1
             #         arrival = ways[i]['Arrival']
             totalCost = 0
-            print("================way================")
-            print(ways)
+            #print("================way================")
+            #print(ways)
             for w in way['way']:
-                print("================w======================")
-                print(w)
+                #print("================w======================")
+                #print(w)
                 if(w['type'] == 'driving'):
                     info_cost =  gmaps.distance_matrix([[w['latDeparture'],w['lngDeparture']]],[[w['latArrival'],w['lngArrival']]])
                     w['cost'] = info_cost['rows'][0]['elements'][0]['duration']['value']
@@ -822,23 +827,23 @@ if __name__ == "__main__":
 # nodePost.earliestTime - node.serviceTime - getFee(node,nodePost,gmaps,driver,db)> node.earliestTime and   node.earliestTime > nodePrev.earliestTime + nodePrev.serviceTime + getFee(nodePrev,node,gmaps,driver,db)):
 
     listRoute = [[Node(1,21600,21600,0,"22 lê khôi, Vinh, Nghệ An"),Node(1,576000,576000,0,"Đại học Bách Khoa Hà Nội")],[Node(1,21600,21600,0,"Đại học Bách Khoa Hà Nội"),Node(1,576000,576000,0,"22 lê khôi, Vinh, Nghệ An")]]
-    # print(getFee(dpt,arv,gmaps,driver,db))
-    print('result')
+    # #print(getFee(dpt,arv,gmaps,driver,db))
+    #print('result')
     from copy import deepcopy
     firstSolution = createPlan(listNodeUnschedule,deepcopy(listRoute),gmaps,driver,db)
-    print("listNodeUnschedule")
-    for _ in listNodeUnschedule:
-        print(str(_))
+    #print("listNodeUnschedule")
+    # for _ in listNodeUnschedule:
+        #print(str(_))
     for route in firstSolution:
         if(len(route)>=3):
-            print("unschedule element")
+            #print("unschedule element")
             for i in range(1,len(route)-1):
-                print(str(route[i]))
+                #print(str(route[i]))
                 listNodeUnschedule.append(route[i])
 
-    print("listNodeUnschedule")
-    for _ in listNodeUnschedule:
-        print(str(_))
+    #print("listNodeUnschedule")
+    # for _ in listNodeUnschedule:
+        #print(str(_))
     secondSolution = createPlan(deepcopy(listNodeUnschedule),deepcopy(listRoute),gmaps,driver,db)
 
     bestSolution = firstSolution if getTotalScore(firstSolution) >= getTotalScore(secondSolution) else secondSolution
@@ -846,7 +851,7 @@ if __name__ == "__main__":
 
     #     createPlan(listNodeUnschedule,listRoute,gmaps,driver,db)
 
-    for route in bestSolution:
-        for n in route:
-            print("------------------------------")
-            print(str(n))
+    # for route in bestSolution:
+    #     for n in route:
+            #print("------------------------------")
+            #print(str(n))

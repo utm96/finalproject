@@ -11,8 +11,9 @@ from model import Node
 mongo_uri = 'mongodb://localhost:27017'
 mongo_db = 'DataTransport'
 
-gmaps = googlemaps.Client(key='AIzaSyD4n_B9MKx7XooJ6kaXkLFe-JMPhkVMsGg')
+# gmaps = googlemaps.Client(key='AIzaSyD4n_B9MKx7XooJ6kaXkLFe-JMPhkVMsGg')
 # gmaps = googlemaps.Client(key='AIzaSyCbhGuXbFO7RvpyYPCeZWlkzzTE2rBZbYc')
+gmaps = googlemaps.Client(key='AIzaSyDNhfrIARSmGnHqVA1lxLxWnQAHR5K32vI')
 app = Flask(__name__,static_url_path = "/static")
 # from flask import 
 @app.route("/")
@@ -75,45 +76,57 @@ def planning_home():
         for day in data['routes']:
             start  = day[0]
             startNode = Node(1,start['timeStart'],start['timeStart'],0,start['adress'])
+            # print(startNode.)
             end = day[1]
             endNode = Node(1,end['timeStart'],end['timeStart'],0,end['adress'])
             listRoute.append([startNode,endNode])
         for place in data['locations']:
             location = Node(1,place['start'],place['end'],place['duration'],place['address'])
             listNodeUnschedule.append(location)
-        # dpt = Node(1,21600,50,60,"22 lê khôi, Vinh, Nghệ An")
-        # arv = Node(1,20,50,60,"Đại học Bách Khoa Hà Nội")
-        # a = Node(1,25200,28000,300,"43 chùa bộc, đống đa, hà nội")
-        # b = Node(1,25200,28000,300,"cảng hàng không Vinh")
-        # c = Node(1,28000,32000,300,"bến xe mỹ đình")
-        # d = Node(1,26000,40000,300,"ga hà nội")
-        # e = Node(1,45200,50000,300,"lăng bác")
 
-        # listNodeUnschedule =  [a,b,c,d,e]
-        # listRoute = [[Node(1,21600,21600,0,"22 lê khôi, Vinh, Nghệ An"),Node(1,576000,576000,0,"Đại học Bách Khoa Hà Nội")],[Node(1,21600,21600,0,"Đại học Bách Khoa Hà Nội"),Node(1,576000,576000,0,"22 lê khôi, Vinh, Nghệ An")]]
-        # print('result')
+
+        firstSolution = createPlan(listNodeUnschedule,listRoute,gmaps,driver,db)
         from copy import deepcopy
-        firstSolution = createPlan(listNodeUnschedule,deepcopy(listRoute),gmaps,driver,db)
+
         print("listNodeUnschedule")
-        for _ in listNodeUnschedule:
-            print(str(_))
+        # for _ in listNodeUnschedule:
+        #     print(str(_))
         for route in firstSolution:
             if(len(route)>=3):
                 print("unschedule element")
                 for i in range(1,len(route)-1):
-                    print(str(route[i]))
+                    # print(str(route[i]))
                     listNodeUnschedule.append(route[i])
+        listRouteCopy = deepcopy(listRoute)
+        for i in range(0,len(listRouteCopy)):
+            listRouteCopy[i] = [listRouteCopy[i][0],listRouteCopy[i][-1]]
+        time = 10
+        bestSolution = firstSolution
+        while(time > 0):
+            print("================================ lan : "  + str(time))
+            lnu = deepcopy(listNodeUnschedule)
+            lr = deepcopy(listRouteCopy)
+            print("len unschedule: "+ str(len(lnu)))
+            for k in lnu:
+                print(str(k))
+            print("=======day======")
+            print(lr)
+            nextSolution = createPlan(lnu,lr,gmaps,driver,db)
+            if ((getTotalScore(bestSolution)['score'] < getTotalScore(nextSolution)['score']) or (getTotalScore(bestSolution)['score'] == getTotalScore(nextSolution)['score'] and getTotalScore(bestSolution)['fee'] >= getTotalScore(nextSolution)['fee'])):
+                bestSolution = nextSolution 
 
-        # print("listNodeUnschedule")
-        # for _ in listNodeUnschedule:
-        #     print(str(_))
-        secondSolution = createPlan(deepcopy(listNodeUnschedule),deepcopy(listRoute),gmaps,driver,db)
-        thirdSolution = createPlan(deepcopy(listNodeUnschedule),deepcopy(listRoute),gmaps,driver,db)
+            for route in nextSolution:
+                if(len(route)>=3):
+                    for i in range(1,len(route)-1):
+                        lnu.append(route[i])
+            lrCopy = deepcopy(lr)
+            for h in range(0,len(lrCopy)):
+                lrCopy[h] = [lrCopy[h][0],lrCopy[h][-1]]
+            listNodeUnschedule = lnu
+            listRouteCopy = lrCopy
+            time += -1
 
-        bestSolution = firstSolution if ((getTotalScore(firstSolution)['score'] > getTotalScore(secondSolution)['score']) or (getTotalScore(firstSolution)['score'] == getTotalScore(secondSolution)['score'] and getTotalScore(firstSolution)['fee'] >= getTotalScore(secondSolution)['fee'])) else secondSolution
-        bestSolution = bestSolution if ((getTotalScore(bestSolution)['score'] > getTotalScore(thirdSolution)['score']) or (getTotalScore(bestSolution)['score'] == getTotalScore(thirdSolution)['score'] and getTotalScore(bestSolution)['fee'] >= getTotalScore(thirdSolution)['fee'])) else thirdSolution
 
-        
         solutionFinal = []
         for day in bestSolution:
             dayFinal = []
@@ -124,8 +137,6 @@ def planning_home():
             solutionFinal.append(dayFinal)
         print(solutionFinal)
         return jsonify(solutionFinal)
-
-
 
 
 def getTotalScore(lstRoute):
@@ -263,9 +274,9 @@ def b(text):
     return text
 def create_level(graphDB_Session,name,long_name,short_name,lat,lng,level,nameParent,levelParent):
     query_create  = ['CREATE (',"",":"+level+" { name:'","","',lat : ","",", lng:","",", long_name:'","","', short_name:'","","'})"]
-    query_car  = ['CREATE (',"",":CarStation { name:'","","', long_name:'","","', short_name:'","","'})"]
-    query_train  = ['CREATE (',"",":TrainStation { name:'","","', long_name:'","","', short_name:'","","'})"]
-    query_plane  = ['CREATE (',"",":PlaneStation { name:'","","', long_name:'","","', short_name:'","","'})"]
+    query_car  = ['CREATE (',"",":CarStation { name:'","","',lat : ","",", lng:","",", long_name:'","","', short_name:'","","'})"]
+    query_train  = ['CREATE (',"",":TrainStation { name:'","","',lat : ","",", lng:","",", long_name:'","","', short_name:'","","'})"]
+    query_plane  = ['CREATE (',"",":PlaneStation { name:'","","',lat : ","",", lng:","",", long_name:'","","', short_name:'","","'})"]
     # query_car  = ['CREATE (',"",":BoardStation { name:'","","'})"]
 
     query_car_relation ="MATCH (a:"+level+"),(b:CarStation) WHERE a.name = \""+name+"\" and a.name = b.name CREATE (a)-[r:route { min_price: 0, price : 0, ave_price : 0 ,min_time: 0, time : 0, ave_time : 0 , hop : 0 }]->(b)"
@@ -286,19 +297,24 @@ def create_level(graphDB_Session,name,long_name,short_name,lat,lng,level,namePar
 
     query_car[1] = b(name)+'_car'
     query_car[3] = name
-    query_car[5] = long_name
-    query_car[7] = short_name
+    query_car[5] = lat 
+    query_car[7] = lng
+    query_car[9] = long_name
+    query_car[11] = short_name
 
     query_train[1] = b(name)+'_train'
     query_train[3] = name       
-    query_train[5] = long_name
-    query_train[7] = short_name
-
+    query_train[5] = lat
+    query_train[7] = lng
+    query_train[9] = long_name
+    query_train[11] = short_name
 
     query_plane[1] = b(name)+'_plane'
     query_plane[3] = name
-    query_plane[5] = long_name
-    query_plane[7] = short_name
+    query_plane[5] = lat
+    query_plane[7] = lng
+    query_plane[9] = long_name
+    query_plane[11] = short_name
 
     print(''.join(query_car))
     print(''.join(query_create))
